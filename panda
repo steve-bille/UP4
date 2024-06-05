@@ -1,0 +1,1029 @@
+Ex.no: 1		    Hands-on exercise using Excel
+-------------------------------------------------------------------------------------
+AIM:
+To calculate basic statistical measure including count, average, median, mode, standard deviation, quartile, correlation, variance, maximum and minimum of a dataset using excel.
+
+ALGORITHM:
+Step 1: Open excel.
+Step 2:  Enter your dataset in a column or row.
+Step 3:  Write formulas to calculate:
+    Count: =COUNT(data_range)
+    Average: =AVERAGE(data_range)
+    Median: =MEDIAN(data_range)
+    Mode: =MODE.SNGL(data_range)
+    Standard deviation: =STDEV.P(data_range)
+    Quartiles: =QUARTILE.INC(data_range, quartile_number) for each quartile
+    Correlation: =CORREL(data_range1, data_range2)
+    Variance: =VAR.P(data_range)
+    Maximum: =MAX(data_range)
+    Minimum: =MIN(data_range)
+Step 4:  For frequency distribution, create bins and use the FREQUENCY function.
+Step 5:  Create a histogram using a bar chart and the frequency distribution data.
+
+PROBLEM STATEMENT:
+You are provided with dataset containing sports goods sales. The dataset includes goods, quantity, cost, discount, revenue, defective. Perform functions such as count, average, median, mode, standard deviation, maximum, minimum, variance, correlation.
+
+PROGRAM:
+    Count: =COUNT (D2:D14)
+    Average: =AVERAGE (B2:B14)
+    Median: =MEDIAN (B2:B14)
+    Mode: =MODE.SNGL(C2:C14)
+    Standard deviation: =STDEV.P(B2:B14)
+    Quartiles: =QUARTILE.INC (B2:B14,1) 
+    Correlation: =CORREL (B2:B14, C2:C14)
+
+    Variance: =VAR.P(B2:B14)
+    Maximum: =MAX (C2:C14)
+    Minimum: =MIN (C2:C14)
+
+OUTPUT:
+
+RESULT:
+Thus, the various statistical function in excel have been performed successfully.
+
+
+
+Ex.no: 2 				Random Sampling 
+-----------------------------------------------------------------------------------------------------
+AIM:
+To write a Python Program to extract sample for the dataset using various random sampling methods.
+
+ALGORITHM:
+Step 1: Import necessary libraries:   - import random
+Step 2. Define the population data:    - population data = [data1, data2, ..., data]
+Step 3. Simple Random Sampling (SRS):
+    - Specify the sample size (sample size)
+    - srs_sample = random.sample(population data, sample_size)
+Step 4. Systematic Sampling:
+    - Specify the sample size (sample_size)
+    - Calculate the sampling interval (k) = population_size / sample_size
+    - Start at a random index within the interval (0 to k-1)
+    - systematic_sample = [population_data[i] for i in range(start_index, len(population_data), k)]
+Step  5. Stratified Sampling:
+    - Divide the population into homogeneous strata
+    - Specify the sample size for each stratum (stratum_sample_sizes)
+    - For each stratum:
+        - Randomly sample from the stratum (using random.sample or np.random.choice) based on the specified sample size
+        - Combine the samples from all strata
+Step 6. Return the samples obtained for analysis.
+
+PROGRAM:
+import random
+from collections import defaultdict
+import csv
+
+# Load the dataset from the file
+with open('employee.csv', mode='r') as file:
+    reader = csv.DictReader(file)
+    employees = [row for row in reader]
+
+
+# Simple Random Sampling (SRS) with replacement
+simple_with_replacement = random.choices(employees, k=5)
+print("Simple Random Sample with Replacement:")
+for emp in simple_with_replacement:
+    print(emp)
+
+# Simple Random Sampling (SRS) without replacement
+simple_without_replacement = random.sample(employees, k=3)
+print("\nSimple Random Sample without Replacement:")
+for emp in simple_without_replacement:
+    print(emp)
+
+# Stratified Sampling with replacement
+stratified_with_replacement = []
+for gender in set(emp["Gender"] for emp in employees):
+    employees_with_gender = [emp for emp in employees if emp["Gender"] == gender]
+    selected = random.choices(employees_with_gender, k=2)
+    stratified_with_replacement.extend(selected)
+print("\nStratified Sample with Replacement:")
+for emp in stratified_with_replacement:
+    print(emp)
+
+# Systematic Sampling with replacement
+systematic_with_replacement = [employees[i] for i in range(0, len(employees), 4)]
+print("\nSystematic Sample with Replacement:")
+for emp in systematic_with_replacement:
+    print(emp)
+
+# Systematic Sampling without replacement
+systematic_without_replacement = [employees[i] for i in range(0, len(employees), len(employees)//3)]
+print("\nSystematic Sample without Replacement:")
+for emp in systematic_without_replacement:
+    print(emp)
+
+
+
+# Cluster Sampling without replacement
+unique_genders = set(emp["Gender"] for emp in employees)
+selected_genders = random.sample(unique_genders, k=2)
+cluster_without_replacement = [emp for emp in employees if emp["Gender"] in selected_genders]
+print("\nCluster Sample without Replacement:")
+for emp in cluster_without_replacement:
+    print(emp)
+
+# Cluster Sampling with replacement
+cluster_with_replacement = [random.choice(cluster_without_replacement) for _ in range(5)]
+print("\nCluster Sample with Replacement:")
+for emp in cluster_with_replacement:
+    print(emp)
+
+OUTPUT:
+Simple Random Sample with Replacement:
+{'ID': 6, 'Name': 'Frank', 'Age': 32, 'Gender': 'Male'}
+{'ID': 9, 'Name': 'Ivy', 'Age': 38, 'Gender': 'Female'}
+{'ID': 9, 'Name': 'Ivy', 'Age': 38, 'Gender': 'Female'}
+{'ID': 10, 'Name': 'Jack', 'Age': 42, 'Gender': 'Male'}
+{'ID': 2, 'Name': 'Bob', 'Age': 30, 'Gender': 'Male'}
+
+Simple Random Sample without Replacement:
+{'ID': 3, 'Name': 'Charlie', 'Age': 35, 'Gender': 'Male'}
+{'ID': 8, 'Name': 'Henry', 'Age': 45, 'Gender': 'Male'}
+{'ID': 9, 'Name': 'Ivy', 'Age': 38, 'Gender': 'Female'}
+
+Stratified Sample with Replacement:
+{'ID': 4, 'Name': 'Diana', 'Age': 28, 'Gender': 'Female'}
+{'ID': 5, 'Name': 'Eva', 'Age': 40, 'Gender': 'Female'}
+{'ID': 3, 'Name': 'Charlie', 'Age': 35, 'Gender': 'Male'}
+{'ID': 2, 'Name': 'Bob', 'Age': 30, 'Gender': 'Male'}
+Systematic Sample with Replacement:
+{'ID': 1, 'Name': 'Alice', 'Age': 25, 'Gender': 'Female'}
+{'ID': 5, 'Name': 'Eva', 'Age': 40, 'Gender': 'Female'}
+{'ID': 9, 'Name': 'Ivy', 'Age': 38, 'Gender': 'Female'}
+
+Systematic Sample without Replacement:
+{'ID': 1, 'Name': 'Alice', 'Age': 25, 'Gender': 'Female'}
+{'ID': 4, 'Name': 'Diana', 'Age': 28, 'Gender': 'Female'}
+{'ID': 7, 'Name': 'Grace', 'Age': 27, 'Gender': 'Female'}
+{'ID': 10, 'Name': 'Jack', 'Age': 42, 'Gender': 'Male'}
+
+Cluster Sample without Replacement:
+{'ID': 1, 'Name': 'Alice', 'Age': 25, 'Gender': 'Female'}
+{'ID': 2, 'Name': 'Bob', 'Age': 30, 'Gender': 'Male'}
+{'ID': 3, 'Name': 'Charlie', 'Age': 35, 'Gender': 'Male'}
+{'ID': 4, 'Name': 'Diana', 'Age': 28, 'Gender': 'Female'}
+{'ID': 5, 'Name': 'Eva', 'Age': 40, 'Gender': 'Female'}
+{'ID': 6, 'Name': 'Frank', 'Age': 32, 'Gender': 'Male'}
+{'ID': 7, 'Name': 'Grace', 'Age': 27, 'Gender': 'Female'}
+{'ID': 8, 'Name': 'Henry', 'Age': 45, 'Gender': 'Male'}
+{'ID': 9, 'Name': 'Ivy', 'Age': 38, 'Gender': 'Female'}
+{'ID': 10, 'Name': 'Jack', 'Age': 42, 'Gender': 'Male'}
+
+Cluster Sample with Replacement:
+{'ID': 10, 'Name': 'Jack', 'Age': 42, 'Gender': 'Male'}
+{'ID': 9, 'Name': 'Ivy', 'Age': 38, 'Gender': 'Female'}
+{'ID': 5, 'Name': 'Eva', 'Age': 40, 'Gender': 'Female'}
+{'ID': 9, 'Name': 'Ivy', 'Age': 38, 'Gender': 'Female'}
+{'ID': 5, 'Name': 'Eva', 'Age': 40, 'Gender': 'Female'}
+
+
+
+
+
+
+
+RESULT:
+Thus, the program for random sampling has been executed successfully.
+
+
+Ex.no: 3			      Z-Test Case Study 
+----------------------------------------------------------------------------------------------
+AIM:
+To gain practical experience in generating, visualizing, and analysing data following a normal
+distribution using Z-scores, and to understand the application of Z-scores in identifying outliers.
+ALGORITHM:
+Step 1: Define case study and a dataset.
+Step 2: State the null and alternative hypothesis
+Step 3: Calculate statistics and standard error of the mean.
+Step 4: Calculate test Statistics and decide to accept or reject the null hypothesis
+Step 5: Evaluate and return the result
+
+CASE STUDY:
+Let's consider a case study where we are analysing the scores of students in a mathematics exam. We want to determine if the average score of students in this exam is significantly different from the national average score for students of the same grade level.
+scores = [75, 82, 68, 90, 78, 85, 72, 88, 80, 79, 83, 87, 76, 84, 73, 
+          89, 81, 74, 86, 77, 91, 69, 92, 70, 82, 76, 85, 79, 87, 78, 
+          83, 71, 88, 77, 84, 80, 86, 75, 81, 74]
+
+PROGRAM:
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+def z_test_one_tailed(data, population_mean, alpha, alternative='two-sided'):
+    
+    sample_mean = np.mean(data)
+    sample_std = np.std(data, ddof=1)  
+    n = len(data)
+    
+    # Standard error of the mean
+    sem = sample_std / np.sqrt(n)
+    
+    
+
+# Step 4: Calculate test Statistics and decide to accept or reject the null hypothesis
+    z_score = (sample_mean - population_mean) / sem
+    
+    # Calculate p-value
+    if alternative == 'greater':
+        p_value = 1 - stats.norm.cdf(z_score)
+    elif alternative == 'less':
+        p_value = stats.norm.cdf(z_score)
+    else:  # two-sided
+        p_value = 2 * (1 - stats.norm.cdf(np.abs(z_score)))  # two-tailed test
+    
+    # Step 5: Evaluate and return the result
+    if p_value < alpha:
+        if alternative == 'greater':
+            return f"Reject null hypothesis. (p-value: {p_value})."
+        elif alternative == 'less':
+            return f"Reject null hypothesis. (p-value: {p_value})."
+        else:
+            return f"Reject null hypothesis. (p-value: {p_value})."
+    else:
+        if alternative == 'greater':
+            return f"Fail to reject null hypothesis. (p-value: {p_value})."
+        elif alternative == 'less':
+            return f"Fail to reject null hypothesis. (p-value: {p_value})."
+        else:
+            return f"Fail to reject null hypothesis.  (p-value: {p_value})."
+
+def plot_normal_curve(data, population_mean, alpha):
+    mu = np.mean(data)
+    sigma = np.std(data)
+    xmin = min(data)
+    xmax = max(data)
+    x = np.linspace(xmin, xmax, 100)
+    plt.plot(x, stats.norm.pdf(x, mu, sigma))
+    plt.title('Normal Distribution of Scores')
+    
+plt.xlabel('Score')
+    plt.ylabel('Probability Density')
+
+    
+    # Shade the region beyond critical values for one-tailed tests
+    if alpha != 0.5:
+        if alpha == 0.05:
+            if mu < population_mean:  # For one-tailed less test
+                critical_value = stats.norm.ppf(alpha)
+                plt.fill_between(x[x <= mu + critical_value], 0, stats.norm.pdf(x[x <= mu + critical_value], mu, sigma), color='red', alpha=0.3)
+            else:  # For one-tailed greater test
+                critical_value = stats.norm.ppf(1-alpha)
+                plt.fill_between(x[x >= mu + critical_value], 0, stats.norm.pdf(x[x >= mu + critical_value], mu, sigma), color='red', alpha=0.3)
+    
+    plt.axvline(mu, color='k', linestyle='dashed', linewidth=1)  # Plot a vertical line at the mean
+    plt.show()
+
+# Constants
+population_mean = 80  # National average score for comparison
+alpha = 0.05  # Significance level
+
+# Scores of 40 students
+scores = [75, 82, 68, 90, 78, 85, 72, 88, 80, 79, 83, 87, 76, 84, 73, 
+          89, 81, 74, 86, 77, 91, 69, 92, 70, 82, 76, 85, 79, 87, 78, 
+          83, 71, 88, 77, 84, 80, 86, 75, 81, 74]
+
+# Perform one-tailed Z-test (greater)
+result_greater = z_test_one_tailed(scores, population_mean, alpha, alternative='greater')
+print("One-tailed Z-test (greater):")
+print(result_greater)
+print()
+
+
+
+
+# Perform one-tailed Z-test (less)
+result_less = z_test_one_tailed(scores, population_mean, alpha, alternative='less')
+
+print("One-tailed Z-test (less):")
+
+print(result_less)
+print()
+
+# Perform two-tailed Z-test
+result_two_tailed = z_test_one_tailed(scores, population_mean, alpha)
+print("Two-tailed Z-test:")
+print(result_two_tailed)
+print()
+
+# Plot Normal Curve
+plot_normal_curve(scores, population_mean, alpha)
+
+OUTPUT:
+One-tailed Z-test (greater):
+Fail to reject null hypothesis. (p-value: 0.355125710854745).
+
+One-tailed Z-test (less):
+Fail to reject null hypothesis. (p-value: 0.644874289145255).
+
+Two-tailed Z-test:
+Fail to reject null hypothesis.  (p-value: 0.71025142170949).
+
+
+RESULT:
+Thus, the python program to calculate z-score and plotting of normal curve has been executed successfully.
+
+
+
+Ex.no: 4 				T-Test Case Study
+
+---------------------------------------------------------------------------------------------------------------------------
+AIM:
+To determine if the mean height of students in a class is significantly different from the national average height of students using T-test.
+
+ALGORITHM:
+Step 1: Null Hypothesis (H0): The mean height of students in the class is equal to the national average height.
+ Step 2: Alternative Hypothesis (H1): The mean height of students in the class is different from the national average height.
+Step 3: We conduct a one-sample t-test using the class's height data and the national average height.
+Step 4: If the resulting p-value is below the chosen significance level (usually 0.05), we reject the null hypothesis, suggesting that there is a significant difference in the mean height between the class and the national average.
+
+CASE STUDY:
+In this case study, we aim to investigate whether the mean height of students in a particular class differs significantly from the national average height of students. This analysis is essential for understanding if there are any notable deviations in the height distribution within the class compared to the general population.
+
+PROGRAM:
+import numpy as np
+import matplotlib.pyplot as plt
+
+def one_sample_t_test(sample_data, population_mean):
+    sample_mean = np.mean(sample_data)
+    sample_std = np.std(sample_data, ddof=1)  # using Bessel's correction for sample standard deviation
+    n = len(sample_data)
+    t_statistic = (sample_mean - population_mean) / (sample_std / np.sqrt(n))
+    degrees_of_freedom = n - 1
+    p_value = 2 * (1 - stats.t.cdf(abs(t_statistic), df=degrees_of_freedom))
+    std_error = sample_std / np.sqrt(n)
+    return t_statistic, p_value, std_error
+
+
+
+def plot_histogram(sample_data, title):
+    plt.hist(sample_data, bins=20, color='skyblue', edgecolor='black', alpha=0.7)
+    plt.title(title)
+    plt.xlabel('Height (cm)')
+    plt.ylabel('Frequency')
+    plt.show()
+
+def case_study_one_sample_test():
+    print("Case Study 1: One-sample Test")
+    # Given data
+    sample_data = np.random.normal(loc=170, scale=10, size=50)  # Sample height data (mean=170cm, std=10cm)
+    population_mean = 165  # National average height in cm
+    
+    # Perform one-sample t-test
+    t_statistic, p_value, std_error = one_sample_t_test(sample_data, population_mean)
+
+    print("Results:")
+    print(f"T-statistic: {t_statistic}")
+    print(f"P-value: {p_value}")
+    print(f"Standard Error: {std_error}")
+
+    # Plot histogram of sample data
+    plot_histogram(sample_data, "Height Distribution of Students in the Class")
+
+if __name__ == "__main__":
+    case_study_one_sample_test()
+
+
+
+
+CASE STUDY:
+This case study aims to compare the effectiveness of two different teaching methods employed in a school by analysing their impact on students' exam scores. Understanding whether one method outperforms the other can inform educational strategies and curriculum development.
+
+PROGRAM:
+import numpy as np
+from scipy import stats
+import matplotlib.pyplot as plt
+
+def two_sample_t_test(sample1_data, sample2_data):
+    t_statistic, p_value = stats.ttest_ind(sample1_data, sample2_data)
+    std_error1 = np.std(sample1_data) / np.sqrt(len(sample1_data))
+    std_error2 = np.std(sample2_data) / np.sqrt(len(sample2_data))
+    return t_statistic, p_value, std_error1, std_error2
+
+def plot_histogram(sample1_data, sample2_data, title1, title2):
+    plt.figure(figsize=(10, 5))
+
+    plt.subplot(1, 2, 1)
+    plt.hist(sample1_data, bins=20, color='skyblue', edgecolor='black', alpha=0.7)
+    plt.title(title1)
+    plt.xlabel('Exam Scores')
+    plt.ylabel('Frequency')
+
+    plt.subplot(1, 2, 2)
+    plt.hist(sample2_data, bins=20, color='lightgreen', edgecolor='black', alpha=0.7)
+    plt.title(title2)
+    plt.xlabel('Exam Scores')
+    plt.ylabel('Frequency')
+
+    plt.tight_layout()
+    plt.show()
+
+
+
+
+
+def case_study_two_sample_test():
+    print("Case Study 2: Two-sample Test")
+    # Given data
+    sample1_data = np.random.normal(loc=75, scale=10, size=60)  # Exam scores for Method A
+    sample2_data = np.random.normal(loc=80, scale=10, size=60)  # Exam scores for Method B
+    
+    # Perform two-sample t-test
+    t_statistic, p_value, std_error1, std_error2 = two_sample_t_test(sample1_data, sample2_data)
+
+    print("Results:")
+    print(f"T-statistic: {t_statistic}")
+    print(f"P-value: {p_value}")
+    print(f"Standard Error Sample 1 (Method A): {std_error1}")
+    print(f"Standard Error Sample 2 (Method B): {std_error2}")
+
+    # Plot histogram of sample data
+    plot_histogram(sample1_data, sample2_data, "Method A", "Method B")
+
+if __name__ == "__main__":
+    case_study_two_sample_test()
+
+
+OUTPUT:
+Case Study 1: One-sample Test
+Results:
+T-statistic: 1.6524945745853754
+P-value: 0.10482820968311324
+Standard Error: 1.5763244373266339
+
+
+Case Study 2: Two-sample Test
+Results:
+T-statistic: -2.3517709551044748
+P-value: 0.020341414510860176
+Standard Error Sample 1 (Method A): 1.1634300466531515
+Standard Error Sample 2 (Method B): 1.311185859773644
+
+
+RESULT:
+Thus, the python program to perform one sample and two sample test using T-test was executed successfully.
+
+
+
+Ex.no: 5 				ANOVA Case study
+-------------------------------------------------------------------------------------------------------------------------------
+
+AIM:
+The aim of the program is to conduct a one-way ANOVA (Analysis of Variance) using Python. ANOVA is a statistical method used to analyse the difference between the means of three or more groups. In this specific case, the program aims to determine whether there is a statistically significant difference in response variable across different levels of a single factor.
+
+ALGORITHM:
+Step 1: Import necessary libraries: pandas, numpy, and f from scipy.stats.
+Step 2: Define a function named one_way_anova that takes three arguments: data, factor_col, and response_col.
+Step 3: Group the data by the factor_col and collect response_col values into lists for each group.
+Step 4: Calculate the number of groups (n_groups), the total number of observations (n_total), and the minimum number of observations within a group (n_within).
+Step 5: Compute the grand mean of the response variable.
+Step 6: Calculate the sum of squares between groups (SSB) by summing the squared deviations of group means from the grand mean, weighted by the number of observations in each group.
+Step 7: Calculate the mean squares between groups (MSB) by dividing SSB by the degrees of freedom (n_groups - 1).
+Step 8: Calculate the sum of squares within groups (SSW) by summing the squared deviations of individual observations from their group means.
+Step 9: Calculate the mean squares within groups (MSW) by dividing SSW by the degrees of freedom (n_total - n_groups).
+Step 10: Compute the F-statistic by dividing MSB by MSW.
+Step 11: Calculate the p-value associated with the F-statistic using the cumulative distribution function (CDF) of the F-distribution.
+Step 12: Create an ANOVA table containing the sources of variation (Between, Within, Total), sum of squares (SS), degrees of freedom (df), mean squares (MS), F-statistic, and p-value.
+Step 13: Return the ANOVA table.
+Step 14: Provide an example case study for one-way ANOVA using the function and print the resulting ANOVA table.
+
+
+CASE STUDY:
+Scientists conducted an experiment to study the effect of different treatments on plant growth. They divided the plants into three treatment groups labelled as A, B, and C. Each treatment group received a different type of fertilizer. After a specified period, the scientists measured the height of each plant to assess its growth.
+The recorded data is as follows:
+Treatment	Response (Plant Height)
+A		10, 12, 15
+B		8, 9, 11
+C		14, 15, 16
+Using the provided Python program, the scientists conducted a one-way ANOVA analysis to determine if there is a statistically significant difference in plant height among the treatment groups.
+The ANOVA results revealed a significant difference in plant height among the treatment groups (p < 0.05). Post-hoc tests or further analysis could be conducted to identify specific differences between treatment groups.
+
+PROGRAM:
+import pandas as pd
+import numpy as np
+from scipy.stats import f
+
+def one_way_anova(data, factor_col, response_col):
+    groups = data.groupby(factor_col)[response_col].apply(list)
+    n_groups = len(groups)
+    n_total = data.shape[0]
+    n_within = data.groupby(factor_col).size().min()
+    grand_mean = data[response_col].mean()
+
+    ssb = sum([len(group)*(np.mean(group) - grand_mean)**2 for group in groups])
+    msb = ssb / (n_groups - 1)
+
+    ssw = sum([sum((np.array(group) - np.mean(group))**2) for group in groups])
+    msw = ssw / (n_total - n_groups)
+
+    f_statistic = msb / msw
+    p_value = 1 - f.cdf(f_statistic, n_groups - 1, n_total - n_groups)
+
+
+
+    anova_table = pd.DataFrame({
+        'Source': ['Between', 'Within', 'Total'],
+        'SS': [ssb, ssw, ssb + ssw],
+        'df': [n_groups - 1, n_total - n_groups, n_total - 1],
+        'MS': [msb, msw, ''],
+        'F': [f_statistic, '', ''],
+        'P-value': [p_value, '', '']
+    })
+
+    return anova_table
+
+# Example case study for one-way ANOVA
+one_way_data = pd.DataFrame({
+    'Treatment': ['A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C'],
+    'Response': [10, 12, 15, 8, 9, 11, 14, 15, 16]
+})
+
+print("One-Way ANOVA:")
+print(one_way_anova(one_way_data, 'Treatment', 'Response'))
+
+CASE STUDY:
+Scientists conducted an experiment to investigate the combined effect of fertilizer type and watering frequency on plant growth. They divided plants into two groups based on the frequency of fertilizer application (daily or weekly) and watering (daily or weekly). After a specified period, they measured the height of each plant.
+Using the provided Python program, the scientists performed a two-way ANOVA analysis to examine how fertilizer type and watering frequency interact to affect plant height. The ANOVA results revealed significant main effects of both fertilizer type (F(1, 24) = 7.292, p = 0.012) and watering frequency (F(1, 24) = 5.931, p = 0.023), as well as a significant interaction effect between fertilizer type and watering frequency (F(1, 24) = 6.107, p = 0.020).
+Further post-hoc tests or subgroup analyses may be conducted to explore specific differences between treatment groups and understand the nuanced relationship between fertilizer type, watering frequency, and plant height.
+This study underscores the importance of considering multiple factors simultaneously in agricultural research and highlights the utility of statistical methods, such as two-way ANOVA, in elucidating complex interactions between variables affecting plant growth.
+
+
+
+
+PROGRAM:
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+
+# Create a dataframe
+dataframe = pd.DataFrame({'Fertilizer': np.repeat(['daily', 'weekly'], 15),
+                          'Watering': np.repeat(['daily', 'weekly'], 15),
+                          'height': [14, 16, 15, 15, 16, 13, 12, 11,
+                                     14, 15, 16, 16, 17, 18, 14, 13,
+                                     14, 14, 14, 15, 16, 16, 17, 18,
+                                     14, 13, 14, 14, 14, 15]})
+
+# Performing two-way ANOVA
+model = ols('height ~ C(Fertilizer) + C(Watering) + C(Fertilizer):C(Watering)', data=dataframe).fit()
+result = sm.stats.anova_lm(model, type=2)
+
+# Print the result in table format
+print("Two-Way ANOVA Result:")
+print(result)
+
+OUTPUT:
+One-Way ANOVA:
+    	Source         	SS  		df         	MS         	F   		P-value
+0  	Between  	48.222222   	2  	24.111111  	7.482759  	0.023439
+1   	Within  	19.333333   	6   	3.222222                    
+2    	Total  		67.555556   	8  
+
+
+
+
+
+
+
+
+Two-Way ANOVA Result:
+                             		df     	sum_sq   	mean_sq         	F    		PR(>F)
+C(Fertilizer)               		1.0   	0.033333  	0.033333  	0.012069  	0.913305
+C(Watering)                 		1.0   	0.000369  	0.000369  	0.000133  	0.990865
+C(Fertilizer):C(Watering)   	1.0   	0.040866  	0.040866  	0.014796  	0.904053
+Residual                   		28.0  	77.333333  	2.761905       	NaN       	NaN
+
+
+
+
+RESULT:
+Thus, the python program to perform ANOVA One-way classification and Two-way classification was executed successfully.
+
+
+
+Ex.no: 6				  Regression
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+AIM:
+To understand the application of regression analysis in predicting the selling price of cars based on their specifications by developing a regression model.
+ALGORITHM:
+Step 1: Import necessary libraries: pandas, NumPy, and matplotlib.pyplot.
+Step 2: Read the dataset containing car information from a CSV file.
+Step 3: Extract the 'Engine' and 'Power' columns as independent (x) and dependent (y) variables.
+Step 4: Calculate the mean of the 'Engine' and 'Power' columns.
+Step 5: Initialize variables for calculating the slope (m) and y-intercept (c).
+Step 6: Iterate through each data point to calculate the numerator and denominator of the slope formula.
+Step 7: Compute the slope (m) and y-intercept (c) using the formulas.
+Step 8: Predict the values of 'Power' (y) using the regression equation.
+Step 9: Compute the Mean Squared Error (MSE) to evaluate model performance.
+Step 10: Generate a set of x values for the regression line.
+Step 11: Compute the corresponding y values for the regression line using the regression equation.
+Step 12: Plot the regression line and data points on a scatter plot.
+Step 13: Display the plot.
+
+CASE STUDY:
+You are provided with a dataset containing information about various cars, including their specifications and selling prices. The task is to develop a linear regression to predict the selling price of a car based on its specifications. This predictive model will assist potential buyers and sellers in estimating the fair market value of a car.
+
+PROGRAM:
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+data = pd.read_csv("/content/cars.csv")
+
+x_values = data['Engine']
+y_values = data['Power'].values
+
+
+mean_x = np.mean(x_values)
+mean_y = np.mean(y_values)
+numer = 0
+denom = 0
+m = len(x_values)
+for i in range(m):
+    numer += (x_values[i] - mean_x) * (y_values[i] - mean_y)
+    denom += (x_values[i] - mean_x) ** 2
+m = numer / denom
+c = mean_y - (m * mean_x)
+print(f"Slope Value (m): {m}\nY-intercept Value (c): {c}")
+y_pred = c + m * x_values
+mse = np.mean((y_pred - y_values) ** 2)
+print(f"Mean Squared Error (MSE): {mse}\n")
+max_x = np.max(x_values) + 10
+min_x = np.min(x_values) - 10
+x_plot = np.linspace(min_x, max_x, 10)
+y_plot = c + m * x_plot
+plt.plot(x_plot, y_plot, color='red', label='Regression Line')
+plt.scatter(x_values, y_values, c='purple', label='Data Points')
+plt.xlabel('Engine')
+plt.ylabel('Power')
+plt.legend()
+plt.show()
+
+CASE STUDY:
+The Student Performance Dataset is a dataset designed to examine the factors influencing academic student performance. The dataset consists of 10,000 student records, with each record containing information about various predictors and a performance index.
+
+PROGRAM:
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+data = pd.read_csv('/content/marks.csv')
+df = data.head(250)
+
+
+X_previous_score = df[['previous score']]
+X_new_score = df[['new score']]
+Y = df['sample questions']
+def linear_regression(X, Y):
+    mean_X = np.mean(X)
+    mean_Y = np.mean(Y)
+    numer = 0
+    denom = 0
+    m = 0
+    c = 0
+    n = len(X)
+    for i in range(n):
+        numer += (X[i] - mean_X) * (Y[i] - mean_Y)
+        denom += (X[i] - mean_X) ** 2
+    if denom != 0:
+        m = numer / denom
+        c = mean_Y - (m * mean_X)
+
+    Y_pred = m * X + c
+    mse = np.sum((Y - Y_pred) ** 2) / n
+    return Y_pred, mse, m, c
+Y_pred_previous_score, mse_previous_score, m_previous_score, c_previous_score = linear_regression(X_previous_score.values.flatten(), Y.values)
+Y_pred_new_score, mse_new_score, m_new_score, c_new_score = linear_regression(X_new_score.values.flatten(), Y.values)
+print("Regression Results for Sample Questions vs. Previous Score:")
+print(f"Slope (m) for Previous Score: {m_previous_score:.2f}")
+print(f"Y-intercept (c) for Previous Score: {c_previous_score:.2f}")
+print(f"Mean Squared Error (MSE) for Previous Score: {mse_previous_score:.2f}")
+print()
+
+print("Regression Results for Sample Questions vs. New Score:")
+print(f"Slope (m) for New Score: {m_new_score:.2f}")
+print(f"Y-intercept (c) for New Score: {c_new_score:.2f}")
+print(f"Mean Squared Error (MSE) for New Score: {mse_new_score:.2f}")
+
+
+print()
+plt.figure(figsize=(10, 6))
+
+# Plot for Sample Questions vs. Previous Score
+plt.scatter(X_previous_score, Y, color='red', label='Observed data (Previous Score)')
+plt.plot(X_previous_score, Y_pred_previous_score, color='blue', linewidth=2, label='Regression line (Previous Score)')
+
+# Plot for Sample Questions vs. New Score
+plt.scatter(X_new_score, Y, color='green', label='Observed data (New Score)')
+plt.plot(X_new_score, Y_pred_new_score, color='orange', linewidth=2, label='Regression line (New Score)')
+plt.xlabel('Previous Score / New Score')
+plt.ylabel('Sample Questions')
+plt.title('Linear Regression: Sample Questions vs. Previous Score/New Score')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+OUTPUT:
+Slope Value (m): 0.09823028607866006
+Y-intercept Value (c): -24.109773641712508
+Mean Squared Error (MSE): 2057.5857064714783
+
+ 
+
+
+Regression Results for Sample Questions vs. Previous Score:
+Slope (m) for Previous Score: 0.29
+Y-intercept (c) for Previous Score: 44.61
+Mean Squared Error (MSE) for Previous Score: 638.79
+
+Regression Results for Sample Questions vs. New Score:
+Slope (m) for New Score: 0.14
+Y-intercept (c) for New Score: 56.54
+Mean Squared Error (MSE) for New Score: 700.31
+
+
+
+RESULT:
+Thus, the python program to understand the application of regression analysis was executed successfully.
+
+ 
+Ex.no:7			        Logistic Regression
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+AIM:
+The aim of the program is to build a logistic regression model to predict diabetes outcome based on various health parameters and evaluates the model's performance by calculating accuracy, generating a confusion matrix, and plotting the Receiver Operating Characteristic (ROC) curve.
+
+ALGORITHM:
+Step 1: Import necessary libraries: pandas, numpy, seaborn, matplotlib.pyplot for data manipulation, visualization, and modeling.
+Step 2: Load the dataset using pandas.
+Step 3: Define features (X) and target variable (y) by separating the 'Outcome' column.
+Step 4: Split the dataset into training and testing sets using train_test_split from sklearn.model_selection.
+Step 5: Initialize a logistic regression model with Logistic Regression from sklearn.linear_model.
+Step 6: Train the model using the training data.
+Step 7: Predict the outcomes on the test set.
+Step 8: Calculate accuracy using accuracy_score from sklearn.metrics.
+Step 9: Generate a confusion matrix using confusion_matrix from sklearn.metrics.
+Step 10: Plot the ROC curve using roc_curve and auc functions from sklearn.metrics.
+Step 11: Save the trained model using joblib.dump.
+
+CASE STUDY:
+The program utilizes the Pima Indians Diabetes Dataset, focusing on health data of adult females from the Pima Indian heritage to predict diabetes occurrence. It employs logistic regression to build a classification model using parameters like pregnancies, glucose level, BMI, etc. The model's accuracy is evaluated, and its performance is visualized via a ROC curve. The trained model is then saved for future use, aiding in early diabetes detection and personalized healthcare for at-risk individuals.
+
+PROGRAM:
+# Importing necessary libraries
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+
+
+from sklearn.metrics import roc_curve, auc, accuracy_score, confusion_matrix
+import joblib
+
+# Load the dataset
+data = pd.read_csv("/content/diabetes.csv")
+
+# Display the first few rows of the dataset
+print(data.head())
+
+# Define features and target variable
+X = data.drop('Outcome', axis=1)
+y = data['Outcome']
+
+# Splitting the dataset into train and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Initialize and train the logistic regression model
+model = LogisticRegression(max_iter=1000)
+model.fit(X_train, y_train)
+
+# Predict on the test set
+y_pred = model.predict(X_test)
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+
+# Generate confusion matrix
+conf_matrix = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:")
+print(conf_matrix)
+
+# Plot ROC curve
+y_prob = model.predict_proba(X_test)[:,1]
+fpr, tpr, thresholds = roc_curve(y_test, y_prob)
+
+roc_auc = auc(fpr, tpr)
+
+plt.figure()
+plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC) Curve')
+plt.legend(loc="lower right")
+plt.show()
+
+# Save the model for future use
+joblib.dump(model, 'diabetes_logistic_regression_model.pkl')
+
+OUTPUT:
+  	Pregnancies  	Glucose  	BloodPressure  	SkinThickness  		Insulin   	BMI  
+0            6      		148            		72             35        		0  		33.6   
+1            1       		85             		66             29        		0  		26.6   
+2            8      		183             		64              0        		0  		23.3   
+3            1       		89             		66             23       		94  		28.1   
+4            0      		137             		40             35      		168 		 43.1   
+
+   DiabetesPedigreeFunction  		Age  		Outcome  
+0                     0.627   			50        		1  
+1                     0.351   			31        		0  
+2                     0.672   			32        		1  
+3                     0.167   			21        		0  
+4                     2.288   			33        		1  
+
+Accuracy: 0.7467532467532467
+Confusion Matrix:
+[[78 21]
+ [18 37]]
+
+
+
+
+RESULT: 
+Thus, the python program to understand the application of logistic regression analysis was executed successfully.
+
+
+Ex.no:8				Time Series Analysis	
+-----------------------------------------------------------------------------------------------------------------------------------------------
+AIM:
+The aim of the program is to conduct time series analysis, forecasting, and visualize moving averages and autocorrelation.
+
+ALGORITHM:
+Step:1 Load and pre-process the dataset.
+Step:2 Use the Augmented Dickey-Fuller (ADF) test to check for stationarity.
+Step:3 Apply log transformation and differencing to make the series stationary.
+Step:4 Plot the Autocorrelation Function (ACF) and Partial Autocorrelation Function (PACF).
+Step:5 Fit a Seasonal ARIMA (SARIMAX) model to the data.
+Step:6 Forecast the gold prices until 2030.
+Step:7 Plot the forecasted results and moving averages.
+Step:8 Save the forecasted data and generate a table of predicted prices.
+
+CASE STUDY:
+This program analyses historical gold price data (in INR) to predict future prices up to the year 2030. The steps include loading and cleaning the data, checking for stationarity, and transforming the data to achieve stationarity. The program then fits a SARIMAX model to the transformed data, forecasts future prices, and visualizes the results along with moving averages. The predicted prices are saved and displayed in a tabular format for annual averages from 2024 to 2030.
+
+PROGRAM:
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+import statsmodels.api as sm
+from datetime import timedelta
+
+# Load the dataset
+df = pd.read_csv("/content/data_inr.csv")
+df = df[['Name', 'Indian rupee']]
+df['Name'] = pd.to_datetime(df['Name'], format='%Y-%m-%d')
+
+df.set_index('Name', inplace=True)
+df.dropna(inplace=True)
+
+# Ensure all values are positive
+df = df[df['Indian rupee'] > 0]
+
+# Check stationarity using ADF test
+result_of_adfuller = adfuller(df['Indian rupee'])
+print('ADF Statistic: %f' % result_of_adfuller[0])
+print('p-value: %f' % result_of_adfuller[1])
+print('Critical Values:')
+for key, value in result_of_adfuller[4].items():
+    print('\t%s: %.3f' % (key, value))
+
+# Log transformation and differencing to make the series stationary
+log_transform = np.log(df['Indian rupee'])
+diff_log_transform = log_transform.diff().dropna()
+
+# Check stationarity of the differenced log-transformed series
+result_of_adfuller = adfuller(diff_log_transform)
+print('ADF Statistic after log transformation: %f' % result_of_adfuller[0])
+print('p-value: %f' % result_of_adfuller[1])
+
+# Plot ACF and PACF
+plt.figure()
+plt.subplot(211)
+plot_acf(diff_log_transform, ax=plt.gca())
+plt.subplot(212)
+plot_pacf(diff_log_transform, ax=plt.gca())
+plt.show()
+
+# Fit SARIMAX model
+mod = sm.tsa.statespace.SARIMAX(df['Indian rupee'], order=(2, 1, 2), seasonal_order=(2, 1, 2, 12),
+                                enforce_stationarity=False, enforce_invertibility=False)
+results = mod.fit()
+
+# Forecasting until 2030
+start_date = df.index[-1]
+end_date = pd.to_datetime('2030-12-31')
+future_dates = pd.date_range(start=start_date + pd.offsets.MonthBegin(), end=end_date, freq='MS')
+future_steps = len(future_dates)
+
+# Extend the forecast to the desired future dates
+future = results.get_forecast(steps=future_steps)
+future_df = future.conf_int()
+future_df['forecast'] = future.predicted_mean
+future_df.index = future_dates
+
+# Plot the forecast
+plt.figure(figsize=(10, 6))
+plt.plot(df.index, df['Indian rupee'], label='Observed')
+plt.plot(future_df.index, future_df['forecast'], label='Forecast')
+plt.fill_between(future_df.index, future_df.iloc[:, 0], future_df.iloc[:, 1], color='k', alpha=0.1)
+plt.title('Gold Price Forecast (2024-2030)')
+plt.xlabel('Year')
+plt.ylabel('Price in INR')
+plt.legend()
+plt.show()
+
+# Save the forecasted data
+future_df.to_csv('gold_price_forecast_2024_2030.csv')
+
+# Generate a table with years and predicted prices from 2024 to 2030
+forecast_table = future_df['forecast'].resample('Y').mean()
+forecast_table.index = forecast_table.index.year
+forecast_table = forecast_table.reset_index()
+forecast_table.columns = ['Year', 'Predicted Gold Price (INR)']
+print(forecast_table)
+
+
+
+
+
+# Plot moving average
+df['Moving Average (30 days)'] = df['Indian rupee'].rolling(window=30).mean()
+df['Moving Average (90 days)'] = df['Indian rupee'].rolling(window=90).mean()
+
+plt.figure(figsize=(10, 6))
+plt.plot(df.index, df['Indian rupee'], label='Observed')
+plt.plot(df.index, df['Moving Average (30 days)'], label='30-Day Moving Average')
+plt.plot(df.index, df['Moving Average (90 days)'], label='90-Day Moving Average')
+plt.title('Gold Price with Moving Averages')
+plt.xlabel('Year')
+plt.ylabel('Price in INR')
+plt.legend()
+plt.show()
+
+# Plot autocorrelation and partial autocorrelation for the original series
+plt.figure()
+plt.subplot(211)
+plot_acf(df['Indian rupee'], ax=plt.gca())
+plt.subplot(212)
+plot_pacf(df['Indian rupee'], ax=plt.gca())
+plt.show()
+
+# Plot autocorrelation and partial autocorrelation for the differenced log-transformed series
+plt.figure()
+plt.subplot(211)
+plot_acf(diff_log_transform, ax=plt.gca())
+plt.subplot(212)
+plot_pacf(diff_log_transform, ax=plt.gca())
+plt.show()
+
+
+
+
+
+
+OUTPUT:
+
+ADF Statistic: 0.314153
+p-value: 0.977985
+Critical Values:
+	1%: -3.445
+	5%: -2.868
+	10%: -2.570
+ADF Statistic after log transformation: -16.389687
+ 
+
+
+Year  	Predicted Gold Price (INR)
+0  	 2018                83132.620869
+1  	 2019                84058.292859
+2   	2020                86483.562753
+3   	2021                88435.933317
+4   	2022                91016.922224
+5   	2023                93483.903941
+6   	2024                96067.557243
+7   	2025                98625.891138
+8   	2026               101206.228201
+9  	 2027               103781.051766
+10  	2028               106360.013350
+11  	2029               108937.804982
+12  	2030               111516.389533
+
+
+
+RESULT: 
+Thus, the python program to understand the time series analysis was executed successfully.
+
