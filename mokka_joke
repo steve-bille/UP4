@@ -1,0 +1,2794 @@
+
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1.	Consider the Insurance database given below. PERSON(driver_ID, name, address) CAR(regno, model,year ) ACCIDENT(report_number,accd_date,location) OWNS(driver_id,regno) PARTICIPATED(driver_id,regno,report_number,damage_amount) i. Specify the primary keys and foreign keys and enter at least five tuples for each relation. ii. Update the damage amount for the car with specific regno in the accident with report number 1025. iii. Add a new accident to the database. iv. Find the total number of people who owned cars that were involved in accidents in the year 2018. v. Find the number of accidents in which cars belonging Wagon R were involved. Can you please give me the solution
+ChatGPT
+ChatGPT
+Sure! Let's go through each part of the task step by step.
+i. Primary Keys and Foreign Keys
+Relations and Keys:
+1.	PERSON
+o	Primary Key: driver_ID
+o	Attributes: driver_ID, name, address
+2.	CAR
+o	Primary Key: regno
+o	Attributes: regno, model, year
+3.	ACCIDENT
+o	Primary Key: report_number
+o	Attributes: report_number, accd_date, location
+4.	OWNS
+o	Primary Key: (driver_id, regno)
+o	Attributes: driver_id, regno
+o	Foreign Keys: driver_id references PERSON(driver_ID), regno references CAR(regno)
+5.	PARTICIPATED
+o	Primary Key: (driver_id, regno, report_number)
+o	Attributes: driver_id, regno, report_number, damage_amount
+o	Foreign Keys: driver_id references PERSON(driver_ID), regno references CAR(regno), report_number references ACCIDENT(report_number)
+Example Tuples:
+Let's create some example data for each relation.
+•	PERSON:
+o	(1, 'John Doe', '123 Elm St')
+o	(2, 'Jane Smith', '456 Oak St')
+o	(3, 'Mike Brown', '789 Pine St')
+o	(4, 'Emily Davis', '101 Maple St')
+o	(5, 'Alice Johnson', '202 Birch St')
+•	CAR:
+o	('AB123CD', 'Toyota Camry', 2015)
+o	('EF456GH', 'Honda Civic', 2017)
+o	('IJ789KL', 'Ford Focus', 2016)
+o	('MN012OP', 'Wagon R', 2018)
+o	('QR345ST', 'Hyundai Elantra', 2019)
+•	ACCIDENT:
+o	(1001, '2020-01-15', 'Downtown')
+o	(1002, '2019-11-22', 'Uptown')
+o	(1003, '2018-07-10', 'Midtown')
+o	(1004, '2018-08-14', 'Suburb')
+o	(1005, '2021-03-30', 'Airport')
+•	OWNS:
+o	(1, 'AB123CD')
+o	(2, 'EF456GH')
+o	(3, 'IJ789KL')
+o	(4, 'MN012OP')
+o	(5, 'QR345ST')
+•	PARTICIPATED:
+o	(1, 'AB123CD', 1001, 3000)
+o	(2, 'EF456GH', 1002, 1500)
+o	(3, 'IJ789KL', 1003, 2000)
+o	(4, 'MN012OP', 1004, 2500)
+o	(5, 'QR345ST', 1005, 3500)
+ii. Update the Damage Amount
+To update the damage amount for the car with a specific regno in the accident with report number 1025, you can use the following SQL command:
+sql
+Copy code
+UPDATE PARTICIPATED
+SET damage_amount = new_damage_amount
+WHERE regno = 'specific_regno' AND report_number = 1025;
+For example, if regno is 'AB123CD' and we want to set damage_amount to 4000:
+sql
+Copy code
+UPDATE PARTICIPATED
+SET damage_amount = 4000
+WHERE regno = 'AB123CD' AND report_number = 1001;
+iii. Add a New Accident
+To add a new accident to the database, you can use the following SQL command:
+sql
+Copy code
+INSERT INTO ACCIDENT (report_number, accd_date, location)
+VALUES (1006, '2022-05-20', 'Seaside');
+iv. Find the Total Number of People Who Owned Cars Involved in Accidents in 2018
+To find the total number of people who owned cars involved in accidents in 2018, you can use the following SQL query:
+sql
+Copy code
+SELECT COUNT(DISTINCT OWNS.driver_id)
+FROM OWNS
+JOIN PARTICIPATED ON OWNS.regno = PARTICIPATED.regno
+JOIN ACCIDENT ON PARTICIPATED.report_number = ACCIDENT.report_number
+WHERE YEAR(ACCIDENT.accd_date) = 2018;
+v. Find the Number of Accidents Involving Wagon R
+To find the number of accidents in which cars belonging to Wagon R were involved, you can use the following SQL query:
+sql
+Copy code
+SELECT COUNT(DISTINCT PARTICIPATED.report_number)
+FROM PARTICIPATED
+JOIN CAR ON PARTICIPATED.regno = CAR.regno
+WHERE CAR.model = 'Wagon R';
+These steps should help you manage and query the Insurance database effectively. Let me know if you need further assistance!
+Anonymous
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2.	Create the Book database and do the following: book(book_name,author_name,price,quantity). i. Write a query to update the quantity by double in the table book. ii. List all the book_name whose price is greater than those of book named "Database for Dummies". iii. Retrieve the list of author_name whose first letter is ’a’ along with the book_name and price. iv. Write a PL/SQL Procedure to find the total number of books of same author.
+ChatGPT
+ChatGPT
+Sure! Let's go through each task step by step for the Book database.
+Create the Book Database
+First, create the book table:
+sql
+Copy code
+CREATE TABLE book (
+    book_name VARCHAR(100),
+    author_name VARCHAR(100),
+    price DECIMAL(10, 2),
+    quantity INT
+);
+Let's insert some example data into the book table:
+sql
+Copy code
+INSERT INTO book (book_name, author_name, price, quantity) VALUES
+('Database for Dummies', 'John Doe', 29.99, 10),
+('Learning SQL', 'Jane Smith', 35.50, 5),
+('Advanced Database Systems', 'Alice Johnson', 45.00, 8),
+('Database Management', 'Alan Brown', 50.00, 12),
+('SQL Queries for Beginners', 'Alex White', 25.00, 7),
+('Intro to Databases', 'Amanda Black', 20.00, 15);
+i. Update the Quantity by Double in the Table book
+To update the quantity of each book by doubling it, use the following SQL query:
+sql
+Copy code
+UPDATE book
+SET quantity = quantity * 2;
+ii. List All the book_name Whose Price is Greater Than Those of the Book Named "Database for Dummies"
+To find all books with a price greater than "Database for Dummies":
+sql
+Copy code
+SELECT book_name
+FROM book
+WHERE price > (SELECT price FROM book WHERE book_name = 'Database for Dummies');
+iii. Retrieve the List of author_name Whose First Letter is 'a' Along with the book_name and Price
+To retrieve the list of authors whose names start with 'a', along with their book names and prices:
+sql
+Copy code
+SELECT author_name, book_name, price
+FROM book
+WHERE LOWER(author_name) LIKE 'a%';
+iv. Write a PL/SQL Procedure to Find the Total Number of Books by the Same Author
+Here's a PL/SQL procedure to find the total number of books by the same author:
+sql
+Copy code
+CREATE OR REPLACE PROCEDURE total_books_by_author(author IN VARCHAR2) IS
+    total_books INT;
+BEGIN
+    SELECT COUNT(*)
+    INTO total_books
+    FROM book
+    WHERE author_name = author;
+    
+    DBMS_OUTPUT.PUT_LINE('Total number of books by ' || author || ': ' || total_books);
+END;
+/
+
+-- Example of calling the procedure
+BEGIN
+    total_books_by_author('John Doe');
+END;
+/
+This procedure takes an author's name as an input and outputs the total number of books written by that author. The DBMS_OUTPUT.PUT_LINE is used to display the result.
+Summary
+•	Created the book table with sample data.
+•	Updated the quantity of each book by doubling it.
+•	Listed all books with a price greater than "Database for Dummies".
+•	Retrieved authors whose names start with 'a' along with their books and prices.
+•	Created a PL/SQL procedure to find the total number of books by the same author.
+Let me know if you need further assistance!
+Anonymous
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3.	Create the Company database with the following tables and do the following: Administration(employee_salary, development _cost, fund_amount, turn_over,bonus) Emp_details (emp_no, emp_name, DOB, address, doj, mobile_no, dept_no, salary). i. Calculate the total and average salary amount of the employees of each department. ii. Display total salary spent for employees. iii. Develop a PL/SQL function to display total fund amount spent by the administration department. iv. Write a query to display the details of employees along with their respective bonuses from the Administration table.
+ChatGPT
+ChatGPT
+Sure! Let's go through each task step by step for the Company database.
+Create the Company Database
+First, create the necessary tables: Administration and Emp_details.
+sql
+Copy code
+CREATE TABLE Administration (
+    employee_salary DECIMAL(10, 2),
+    development_cost DECIMAL(10, 2),
+    fund_amount DECIMAL(10, 2),
+    turn_over DECIMAL(10, 2),
+    bonus DECIMAL(10, 2)
+);
+
+CREATE TABLE Emp_details (
+    emp_no INT PRIMARY KEY,
+    emp_name VARCHAR(100),
+    DOB DATE,
+    address VARCHAR(200),
+    doj DATE,
+    mobile_no VARCHAR(15),
+    dept_no INT,
+    salary DECIMAL(10, 2)
+);
+Let's insert some example data into the tables:
+sql
+Copy code
+INSERT INTO Administration (employee_salary, development_cost, fund_amount, turn_over, bonus) VALUES
+(100000.00, 20000.00, 50000.00, 300000.00, 5000.00),
+(150000.00, 25000.00, 60000.00, 350000.00, 6000.00),
+(120000.00, 22000.00, 55000.00, 310000.00, 5500.00);
+
+INSERT INTO Emp_details (emp_no, emp_name, DOB, address, doj, mobile_no, dept_no, salary) VALUES
+(1, 'John Doe', '1980-01-15', '123 Elm St', '2010-06-10', '1234567890', 101, 50000.00),
+(2, 'Jane Smith', '1985-03-20', '456 Oak St', '2012-07-15', '0987654321', 102, 60000.00),
+(3, 'Mike Brown', '1990-05-25', '789 Pine St', '2015-08-20', '1122334455', 101, 55000.00),
+(4, 'Emily Davis', '1988-09-30', '101 Maple St', '2011-09-05', '2233445566', 103, 70000.00),
+(5, 'Alice Johnson', '1992-11-05', '202 Birch St', '2016-10-10', '3344556677', 102, 65000.00);
+i. Calculate the Total and Average Salary Amount of the Employees of Each Department
+To calculate the total and average salary amount of the employees of each department, use the following SQL query:
+sql
+Copy code
+SELECT dept_no, 
+       SUM(salary) AS total_salary, 
+       AVG(salary) AS average_salary
+FROM Emp_details
+GROUP BY dept_no;
+ii. Display Total Salary Spent for Employees
+To display the total salary spent for employees, use the following SQL query:
+sql
+Copy code
+SELECT SUM(salary) AS total_salary_spent
+FROM Emp_details;
+iii. Develop a PL/SQL Function to Display Total Fund Amount Spent by the Administration Department
+Here’s a PL/SQL function to display the total fund amount spent by the Administration department:
+sql
+Copy code
+CREATE OR REPLACE FUNCTION get_total_fund_amount RETURN DECIMAL IS
+    total_fund DECIMAL(10, 2);
+BEGIN
+    SELECT SUM(fund_amount)
+    INTO total_fund
+    FROM Administration;
+
+    RETURN total_fund;
+END;
+/
+
+-- Example of calling the function
+DECLARE
+    total_fund DECIMAL(10, 2);
+BEGIN
+    total_fund := get_total_fund_amount();
+    DBMS_OUTPUT.PUT_LINE('Total fund amount spent by the administration department: ' || total_fund);
+END;
+/
+iv. Write a Query to Display the Details of Employees Along with Their Respective Bonuses from the Administration Table
+To display the details of employees along with their respective bonuses, use the following SQL query:
+sql
+Copy code
+SELECT e.emp_no, e.emp_name, e.DOB, e.address, e.doj, e.mobile_no, e.dept_no, e.salary, a.bonus
+FROM Emp_details e
+JOIN Administration a ON e.salary = a.employee_salary;
+Note: This assumes that the employee_salary in the Administration table matches the salary in the Emp_details table. If the relationship between employees and their bonuses is different, adjust the JOIN condition accordingly.
+Summary
+•	Created the Administration and Emp_details tables with sample data.
+•	Calculated the total and average salary amount of the employees of each department.
+•	Displayed the total salary spent for employees.
+•	Developed a PL/SQL function to display the total fund amount spent by the administration department.
+•	Queried the details of employees along with their respective bonuses from the Administration table.
+Let me know if you need further assistance!
+Anonymous
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4.	Create the student database with the following tables and do the following: assessment(reg_no,name, mark1, mark2, mark3, total) dept_details (dept_no, dept_name, location). i. Using alter command drop the column location from the table dept_details. ii. Display all dept_name along withdept_no. iii. Drop the table dept_details. iv. Write a PL/SQL Trigger to verify the data before insertion on assessment table.
+ChatGPT
+ChatGPT
+Sure! Let's go through each task step by step for the student database.
+Create the Student Database
+First, create the necessary tables: assessment and dept_details.
+sql
+Copy code
+CREATE TABLE assessment (
+    reg_no INT PRIMARY KEY,
+    name VARCHAR(100),
+    mark1 INT,
+    mark2 INT,
+    mark3 INT,
+    total INT
+);
+
+CREATE TABLE dept_details (
+    dept_no INT PRIMARY KEY,
+    dept_name VARCHAR(100),
+    location VARCHAR(100)
+);
+Let's insert some example data into the tables:
+sql
+Copy code
+INSERT INTO assessment (reg_no, name, mark1, mark2, mark3, total) VALUES
+(1, 'John Doe', 85, 90, 80, 255),
+(2, 'Jane Smith', 75, 80, 85, 240),
+(3, 'Mike Brown', 65, 70, 75, 210);
+
+INSERT INTO dept_details (dept_no, dept_name, location) VALUES
+(101, 'Computer Science', 'Building A'),
+(102, 'Mathematics', 'Building B'),
+(103, 'Physics', 'Building C');
+i. Using Alter Command Drop the Column location from the Table dept_details
+To drop the column location from the dept_details table, use the following SQL command:
+sql
+Copy code
+ALTER TABLE dept_details
+DROP COLUMN location;
+ii. Display All dept_name Along with dept_no
+To display all department names along with their department numbers, use the following SQL query:
+sql
+Copy code
+SELECT dept_no, dept_name
+FROM dept_details;
+iii. Drop the Table dept_details
+To drop the dept_details table, use the following SQL command:
+sql
+Copy code
+DROP TABLE dept_details;
+iv. Write a PL/SQL Trigger to Verify the Data Before Insertion on assessment Table
+Here's a PL/SQL trigger to verify the data before insertion into the assessment table. This trigger ensures that the marks for each subject (mark1, mark2, mark3) and the total are within a valid range (0-100 for individual marks and 0-300 for the total).
+sql
+Copy code
+CREATE OR REPLACE TRIGGER verify_assessment_data
+BEFORE INSERT OR UPDATE ON assessment
+FOR EACH ROW
+BEGIN
+    IF :NEW.mark1 < 0 OR :NEW.mark1 > 100 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'mark1 must be between 0 and 100');
+    END IF;
+
+    IF :NEW.mark2 < 0 OR :NEW.mark2 > 100 THEN
+        RAISE_APPLICATION_ERROR(-20002, 'mark2 must be between 0 and 100');
+    END IF;
+
+    IF :NEW.mark3 < 0 OR :NEW.mark3 > 100 THEN
+        RAISE_APPLICATION_ERROR(-20003, 'mark3 must be between 0 and 100');
+    END IF;
+
+    IF :NEW.total <> :NEW.mark1 + :NEW.mark2 + :NEW.mark3 THEN
+        RAISE_APPLICATION_ERROR(-20004, 'total must be the sum of mark1, mark2, and mark3');
+    END IF;
+END;
+/
+Summary
+•	Created the assessment and dept_details tables with sample data.
+•	Dropped the location column from the dept_details table.
+•	Displayed all department names along with their department numbers.
+•	Dropped the dept_details table.
+•	Created a PL/SQL trigger to verify data before insertion into the assessment table.
+Let me know if you need further assistance!
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+5.	Consider the following Tables for a bus reservation system application: BUS (ROUTENO, SOURCE, DESTINATION) PASSENGER (PID, PNAME, DOB, GENDER) BOOK_TICKET (PID, ROUTENO, JOURNEY_DATE, SEAT_NO) i. Include constraint that DOB of passenger should be after 2000 ii. Display the passengers who had booked the journey from Mumbai to Chennai on 02-
+Feb-2019 iii. List the details of passengers who have traveled more than three times on the same
+route. iv. Create a View that displays the RouteNo, source, destination and journey_date which
+moves from Chennai to Delhi.
+ChatGPT
+ChatGPT
+Sure! Let's go through each task step by step for the bus reservation system application.
+Create the Bus Reservation System Tables
+First, create the necessary tables: BUS, PASSENGER, and BOOK_TICKET.
+sql
+Copy code
+CREATE TABLE BUS (
+    ROUTENO INT PRIMARY KEY,
+    SOURCE VARCHAR(100),
+    DESTINATION VARCHAR(100)
+);
+
+CREATE TABLE PASSENGER (
+    PID INT PRIMARY KEY,
+    PNAME VARCHAR(100),
+    DOB DATE,
+    GENDER CHAR(1),
+    CONSTRAINT CHK_DOB CHECK (DOB > DATE '2000-01-01')
+);
+
+CREATE TABLE BOOK_TICKET (
+    PID INT,
+    ROUTENO INT,
+    JOURNEY_DATE DATE,
+    SEAT_NO INT,
+    PRIMARY KEY (PID, ROUTENO, JOURNEY_DATE),
+    FOREIGN KEY (PID) REFERENCES PASSENGER(PID),
+    FOREIGN KEY (ROUTENO) REFERENCES BUS(ROUTENO)
+);
+i. Include Constraint that DOB of Passenger Should Be After 2000
+This has already been included in the PASSENGER table creation script with the CONSTRAINT CHK_DOB CHECK (DOB > DATE '2000-01-01').
+ii. Display the Passengers Who Had Booked the Journey from Mumbai to Chennai on 02-Feb-2019
+To display passengers who booked the journey from Mumbai to Chennai on 02-Feb-2019, use the following SQL query:
+sql
+Copy code
+SELECT p.PID, p.PNAME, p.DOB, p.GENDER
+FROM PASSENGER p
+JOIN BOOK_TICKET bt ON p.PID = bt.PID
+JOIN BUS b ON bt.ROUTENO = b.ROUTENO
+WHERE b.SOURCE = 'Mumbai' AND b.DESTINATION = 'Chennai' AND bt.JOURNEY_DATE = DATE '2019-02-02';
+iii. List the Details of Passengers Who Have Traveled More Than Three Times on the Same Route
+To list the details of passengers who have traveled more than three times on the same route, use the following SQL query:
+sql
+Copy code
+SELECT p.PID, p.PNAME, p.DOB, p.GENDER, bt.ROUTENO, COUNT(*) AS travel_count
+FROM PASSENGER p
+JOIN BOOK_TICKET bt ON p.PID = bt.PID
+GROUP BY p.PID, p.PNAME, p.DOB, p.GENDER, bt.ROUTENO
+HAVING COUNT(*) > 3;
+iv. Create a View That Displays the RouteNo, Source, Destination, and Journey_Date Which Moves From Chennai to Delhi
+To create a view that displays the RouteNo, Source, Destination, and Journey_Date for journeys from Chennai to Delhi, use the following SQL commands:
+sql
+Copy code
+CREATE VIEW Chennai_To_Delhi_Journeys AS
+SELECT b.ROUTENO, b.SOURCE, b.DESTINATION, bt.JOURNEY_DATE
+FROM BUS b
+JOIN BOOK_TICKET bt ON b.ROUTENO = bt.ROUTENO
+WHERE b.SOURCE = 'Chennai' AND b.DESTINATION = 'Delhi';
+You can then query this view using:
+sql
+Copy code
+SELECT * FROM Chennai_To_Delhi_Journeys;
+Summary
+•	Created the BUS, PASSENGER, and BOOK_TICKET tables with necessary constraints.
+•	Included a constraint that DOB of passenger should be after 2000.
+•	Displayed passengers who booked the journey from Mumbai to Chennai on 02-Feb-2019.
+•	Listed the details of passengers who have traveled more than three times on the same route.
+•	Created a view that displays the RouteNo, Source, Destination, and Journey_Date for journeys from Chennai to Delhi.
+Let me know if you need further assistance!
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+6.	Consider the following tables. SAILOR(sid, sname, rating, age) BOATS(bid, bname, colour) RESERVES(sid, bid, day) i. List the sailors in the descending order of their rating. ii. List the sailors whose youngest sailor for each rating and who can vote. iii. List the sailors who have reserved for both ‘RED’ and ‘GREEN’ boats. iv. Create index for sailor table.
+ChatGPT
+ChatGPT
+Sure! Let's go through each task step by step for the tables SAILOR, BOATS, and RESERVES.
+Create the Tables
+First, let's create the necessary tables: SAILOR, BOATS, and RESERVES.
+sql
+Copy code
+CREATE TABLE SAILOR (
+    sid INT PRIMARY KEY,
+    sname VARCHAR(100),
+    rating INT,
+    age INT
+);
+
+CREATE TABLE BOATS (
+    bid INT PRIMARY KEY,
+    bname VARCHAR(100),
+    colour VARCHAR(20)
+);
+
+CREATE TABLE RESERVES (
+    sid INT,
+    bid INT,
+    day DATE,
+    PRIMARY KEY (sid, bid, day),
+    FOREIGN KEY (sid) REFERENCES SAILOR(sid),
+    FOREIGN KEY (bid) REFERENCES BOATS(bid)
+);
+Let's insert some example data into the tables:
+sql
+Copy code
+INSERT INTO SAILOR (sid, sname, rating, age) VALUES
+(1, 'John Doe', 7, 25),
+(2, 'Jane Smith', 8, 30),
+(3, 'Mike Brown', 7, 22),
+(4, 'Emily Davis', 9, 28),
+(5, 'Alice Johnson', 8, 35);
+
+INSERT INTO BOATS (bid, bname, colour) VALUES
+(101, 'Boaty', 'RED'),
+(102, 'Floaty', 'GREEN'),
+(103, 'Saily', 'BLUE'),
+(104, 'Speedy', 'RED'),
+(105, 'Cruisy', 'GREEN');
+
+INSERT INTO RESERVES (sid, bid, day) VALUES
+(1, 101, '2023-06-01'),
+(1, 102, '2023-06-02'),
+(2, 101, '2023-06-03'),
+(3, 103, '2023-06-04'),
+(4, 104, '2023-06-05'),
+(5, 105, '2023-06-06'),
+(3, 105, '2023-06-07'),
+(2, 104, '2023-06-08');
+i. List the Sailors in the Descending Order of Their Rating
+To list the sailors in the descending order of their rating, use the following SQL query:
+sql
+Copy code
+SELECT *
+FROM SAILOR
+ORDER BY rating DESC;
+ii. List the Sailors Who Are the Youngest for Each Rating and Who Can Vote
+Assuming that "who can vote" means the sailor's age is 18 or older, use the following SQL query:
+sql
+Copy code
+SELECT s1.sid, s1.sname, s1.rating, s1.age
+FROM SAILOR s1
+WHERE s1.age >= 18
+AND s1.age = (
+    SELECT MIN(s2.age)
+    FROM SAILOR s2
+    WHERE s2.rating = s1.rating
+);
+iii. List the Sailors Who Have Reserved Both ‘RED’ and ‘GREEN’ Boats
+To list the sailors who have reserved both 'RED' and 'GREEN' boats, use the following SQL query:
+sql
+Copy code
+SELECT s.sid, s.sname
+FROM SAILOR s
+WHERE EXISTS (
+    SELECT 1
+    FROM RESERVES r
+    JOIN BOATS b ON r.bid = b.bid
+    WHERE r.sid = s.sid AND b.colour = 'RED'
+)
+AND EXISTS (
+    SELECT 1
+    FROM RESERVES r
+    JOIN BOATS b ON r.bid = b.bid
+    WHERE r.sid = s.sid AND b.colour = 'GREEN'
+);
+iv. Create an Index for the SAILOR Table
+To create an index for the SAILOR table, use the following SQL command:
+sql
+Copy code
+CREATE INDEX idx_sailor_rating ON SAILOR(rating);
+Summary
+•	Created the SAILOR, BOATS, and RESERVES tables with sample data.
+•	Listed the sailors in the descending order of their rating.
+•	Listed the youngest sailor for each rating who can vote (assuming voting age is 18 or older).
+•	Listed the sailors who have reserved both 'RED' and 'GREEN' boats.
+•	Created an index for the SAILOR table.
+Let me know if you need further assistance!
+Anonymous
+SELECT s.sid, s.sname FROM SAILOR s WHERE EXISTS ( SELECT 1 FROM RESERVES r JOIN BOATS b ON r.bid = b.bid WHERE r.sid = s.sid AND b.colour = 'RED' ) AND EXISTS ( SELECT 1 FROM RESERVES r JOIN BOATS b ON r.bid = b.bid WHERE r.sid = s.sid AND b.colour = 'GREEN' );Can you give me more simplified
+ChatGPT
+ChatGPT
+Certainly! Here is a more simplified version of the query to list the sailors who have reserved both 'RED' and 'GREEN' boats:
+sql
+Copy code
+SELECT s.sid, s.sname
+FROM SAILOR s
+JOIN RESERVES r1 ON s.sid = r1.sid
+JOIN BOATS b1 ON r1.bid = b1.bid
+JOIN RESERVES r2 ON s.sid = r2.sid
+JOIN BOATS b2 ON r2.bid = b2.bid
+WHERE b1.colour = 'RED'
+AND b2.colour = 'GREEN'
+GROUP BY s.sid, s.sname;
+This query joins the SAILOR, RESERVES, and BOATS tables twice to ensure that each sailor has reserved both a 'RED' and a 'GREEN' boat. The GROUP BY clause ensures that each sailor is listed only once.
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+7.	Consider the following relations for a transport management system application: DRIVER (DCODE, DNAME, DOB, GENDER) CITY (CCODE, CNAME) TRUCK (TRUCKCODE, TTYPE) i. Include the constraint as mentioned above and the gender of driver is always 'male'. ii. Develop a SQL query to list the details of each driver and the number of trips traveled. iii. Create an index on truck_code in Drive_truck table. iv. Develop a database trigger that will update the value of TTYPE for particular TRUCKCODE.
+ChatGPT
+ChatGPT
+Sure! Let's go through each task step by step for the transport management system application.
+Create the Tables
+First, let's create the necessary tables: DRIVER, CITY, and TRUCK.
+sql
+Copy code
+CREATE TABLE DRIVER (
+    DCODE INT PRIMARY KEY,
+    DNAME VARCHAR(100),
+    DOB DATE,
+    GENDER CHAR(1) CHECK (GENDER = 'M')
+);
+
+CREATE TABLE CITY (
+    CCODE INT PRIMARY KEY,
+    CNAME VARCHAR(100)
+);
+
+CREATE TABLE TRUCK (
+    TRUCKCODE INT PRIMARY KEY,
+    TTYPE VARCHAR(100)
+);
+
+CREATE TABLE DRIVE_TRUCK (
+    DCODE INT,
+    TRUCKCODE INT,
+    TRIPDATE DATE,
+    PRIMARY KEY (DCODE, TRUCKCODE, TRIPDATE),
+    FOREIGN KEY (DCODE) REFERENCES DRIVER(DCODE),
+    FOREIGN KEY (TRUCKCODE) REFERENCES TRUCK(TRUCKCODE)
+);
+i. Include the Constraint that Gender of Driver is Always 'Male'
+This has already been included in the DRIVER table creation script with the CHECK (GENDER = 'M') constraint.
+ii. Develop a SQL Query to List the Details of Each Driver and the Number of Trips Traveled
+To list the details of each driver and the number of trips they have traveled, use the following SQL query:
+sql
+Copy code
+SELECT d.DCODE, d.DNAME, d.DOB, d.GENDER, COUNT(dt.TRIPDATE) AS num_trips
+FROM DRIVER d
+LEFT JOIN DRIVE_TRUCK dt ON d.DCODE = dt.DCODE
+GROUP BY d.DCODE, d.DNAME, d.DOB, d.GENDER;
+iii. Create an Index on truck_code in DRIVE_TRUCK Table
+To create an index on truck_code in the DRIVE_TRUCK table, use the following SQL command:
+sql
+Copy code
+CREATE INDEX idx_truck_code ON DRIVE_TRUCK(TRUCKCODE);
+iv. Develop a Database Trigger That Will Update the Value of TTYPE for a Particular TRUCKCODE
+Here's a PL/SQL trigger to update the value of TTYPE for a particular TRUCKCODE. This example assumes that the TTYPE is being updated based on some specific conditions or actions.
+sql
+Copy code
+CREATE OR REPLACE TRIGGER update_truck_type
+BEFORE UPDATE ON TRUCK
+FOR EACH ROW
+BEGIN
+    IF :NEW.TTYPE IS NULL THEN
+        :NEW.TTYPE := 'DEFAULT_TYPE';  -- Replace 'DEFAULT_TYPE' with the desired default value or condition.
+    END IF;
+END;
+/
+Alternatively, if you want the trigger to perform a specific update when a truck's type is changed, you can customize the trigger accordingly. For example, updating the truck type based on a condition in another table or external logic.
+Summary
+•	Created the DRIVER, CITY, TRUCK, and DRIVE_TRUCK tables with the required constraints.
+•	Included a constraint that the gender of the driver is always 'male'.
+•	Developed a SQL query to list the details of each driver and the number of trips they have traveled.
+•	Created an index on truck_code in the DRIVE_TRUCK table.
+•	Developed a database trigger to update the value of TTYPE for a particular TRUCKCODE.
+Let me know if you need further assistance!
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+8.	Consider the following relational schema for a banking database application: CUSTOMER (CID, CNAME) BRANCH (BCODE, BNAME) ACCOUNT (ANO, ATYPE, BALANCE, CID, BCODE) TRANSACTION (TID, ANO, TTYPE, TDATE, TAMOUNT) i. Develop a SQL query to list the details of branches and the number of accounts in each branch. ii. Develop a SQL query to list the details of customers who have performed the most transactions today iii. Develop a database trigger that will update the value of BALANCE in ACCOUNT table when a record is inserted in the transaction table
+ChatGPT
+ChatGPT
+Sure! Let's go through each task step by step for the banking database application.
+Create the Tables
+First, let's create the necessary tables: CUSTOMER, BRANCH, ACCOUNT, and TRANSACTION.
+sql
+Copy code
+CREATE TABLE CUSTOMER (
+    CID INT PRIMARY KEY,
+    CNAME VARCHAR(100)
+);
+
+CREATE TABLE BRANCH (
+    BCODE INT PRIMARY KEY,
+    BNAME VARCHAR(100)
+);
+
+CREATE TABLE ACCOUNT (
+    ANO INT PRIMARY KEY,
+    ATYPE VARCHAR(50),
+    BALANCE DECIMAL(15, 2),
+    CID INT,
+    BCODE INT,
+    FOREIGN KEY (CID) REFERENCES CUSTOMER(CID),
+    FOREIGN KEY (BCODE) REFERENCES BRANCH(BCODE)
+);
+
+CREATE TABLE TRANSACTION (
+    TID INT PRIMARY KEY,
+    ANO INT,
+    TTYPE VARCHAR(50),
+    TDATE DATE,
+    TAMOUNT DECIMAL(15, 2),
+    FOREIGN KEY (ANO) REFERENCES ACCOUNT(ANO)
+);
+i. Develop a SQL Query to List the Details of Branches and the Number of Accounts in Each Branch
+To list the details of branches and the number of accounts in each branch, use the following SQL query:
+sql
+Copy code
+SELECT b.BCODE, b.BNAME, COUNT(a.ANO) AS num_accounts
+FROM BRANCH b
+LEFT JOIN ACCOUNT a ON b.BCODE = a.BCODE
+GROUP BY b.BCODE, b.BNAME;
+ii. Develop a SQL Query to List the Details of Customers Who Have Performed the Most Transactions Today
+Assuming the current date is today, use the following SQL query:
+sql
+Copy code
+SELECT c.CID, c.CNAME, COUNT(t.TID) AS num_transactions
+FROM CUSTOMER c
+JOIN ACCOUNT a ON c.CID = a.CID
+JOIN TRANSACTION t ON a.ANO = t.ANO
+WHERE t.TDATE = CURRENT_DATE
+GROUP BY c.CID, c.CNAME
+HAVING COUNT(t.TID) = (
+    SELECT MAX(trans_count)
+    FROM (
+        SELECT COUNT(TID) AS trans_count
+        FROM TRANSACTION
+        WHERE TDATE = CURRENT_DATE
+        GROUP BY ANO
+    ) AS daily_counts
+);
+iii. Develop a Database Trigger That Will Update the Value of BALANCE in ACCOUNT Table When a Record Is Inserted in the TRANSACTION Table
+Here's a PL/SQL trigger that updates the BALANCE in the ACCOUNT table when a record is inserted in the TRANSACTION table. This example assumes that TTYPE is either 'DEPOSIT' or 'WITHDRAWAL'.
+sql
+Copy code
+CREATE OR REPLACE TRIGGER update_account_balance
+AFTER INSERT ON TRANSACTION
+FOR EACH ROW
+DECLARE
+    v_current_balance DECIMAL(15, 2);
+BEGIN
+    SELECT BALANCE INTO v_current_balance
+    FROM ACCOUNT
+    WHERE ANO = :NEW.ANO
+    FOR UPDATE;
+
+    IF :NEW.TTYPE = 'DEPOSIT' THEN
+        v_current_balance := v_current_balance + :NEW.TAMOUNT;
+    ELSIF :NEW.TTYPE = 'WITHDRAWAL' THEN
+        v_current_balance := v_current_balance - :NEW.TAMOUNT;
+    END IF;
+
+    UPDATE ACCOUNT
+    SET BALANCE = v_current_balance
+    WHERE ANO = :NEW.ANO;
+END;
+/
+Summary
+•	Created the CUSTOMER, BRANCH, ACCOUNT, and TRANSACTION tables.
+•	Developed a SQL query to list the details of branches and the number of accounts in each branch.
+•	Developed a SQL query to list the details of customers who have performed the most transactions today.
+•	Created a database trigger to update the value of BALANCE in the ACCOUNT table when a record is inserted in the TRANSACTION table.
+Let me know if you need further assistance!
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+9.	Consider the following database of student enrollment in courses and books adopted for that course. STUDENT(regno, name, major, bdate) COURSE(courseno, cname, dept) ENROLL(regno, courseno, sem, marks) i. Display the total number of students register for more than two courses in a department specified. ii. Display the students who have secured the highest mark in each course iii. List the youngest student of each course in all departments. iv. Develop PL/SQL procedure that updates the marks of a particular student in a specified semester.
+ChatGPT
+ChatGPT
+Sure! Let's go through each task step by step for the student enrollment database.
+Create the Tables
+First, let's create the necessary tables: STUDENT, COURSE, and ENROLL.
+sql
+Copy code
+CREATE TABLE STUDENT (
+    regno INT PRIMARY KEY,
+    name VARCHAR(100),
+    major VARCHAR(50),
+    bdate DATE
+);
+
+CREATE TABLE COURSE (
+    courseno INT PRIMARY KEY,
+    cname VARCHAR(100),
+    dept VARCHAR(50)
+);
+
+CREATE TABLE ENROLL (
+    regno INT,
+    courseno INT,
+    sem VARCHAR(10),
+    marks INT,
+    PRIMARY KEY (regno, courseno, sem),
+    FOREIGN KEY (regno) REFERENCES STUDENT(regno),
+    FOREIGN KEY (courseno) REFERENCES COURSE(courseno)
+);
+i. Display the Total Number of Students Register for More Than Two Courses in a Department Specified
+To display the total number of students registered for more than two courses in a specified department, use the following SQL query. Let's assume the department is 'Computer Science'.
+sql
+Copy code
+SELECT COUNT(DISTINCT e.regno) AS num_students
+FROM ENROLL e
+JOIN COURSE c ON e.courseno = c.courseno
+WHERE c.dept = 'Computer Science'
+GROUP BY e.regno
+HAVING COUNT(e.courseno) > 2;
+ii. Display the Students Who Have Secured the Highest Mark in Each Course
+To display the students who have secured the highest mark in each course, use the following SQL query:
+sql
+Copy code
+SELECT e.courseno, e.regno, s.name, e.marks
+FROM ENROLL e
+JOIN STUDENT s ON e.regno = s.regno
+WHERE e.marks = (
+    SELECT MAX(marks)
+    FROM ENROLL
+    WHERE courseno = e.courseno
+);
+iii. List the Youngest Student of Each Course in All Departments
+To list the youngest student of each course in all departments, use the following SQL query:
+sql
+Copy code
+SELECT e.courseno, s.regno, s.name, s.bdate
+FROM ENROLL e
+JOIN STUDENT s ON e.regno = s.regno
+WHERE s.bdate = (
+    SELECT MIN(s2.bdate)
+    FROM ENROLL e2
+    JOIN STUDENT s2 ON e2.regno = s2.regno
+    WHERE e2.courseno = e.courseno
+);
+iv. Develop a PL/SQL Procedure That Updates the Marks of a Particular Student in a Specified Semester
+Here's a PL/SQL procedure to update the marks of a particular student in a specified semester.
+sql
+Copy code
+CREATE OR REPLACE PROCEDURE update_marks (
+    p_regno IN INT,
+    p_courseno IN INT,
+    p_sem IN VARCHAR2,
+    p_new_marks IN INT
+) AS
+BEGIN
+    UPDATE ENROLL
+    SET marks = p_new_marks
+    WHERE regno = p_regno AND courseno = p_courseno AND sem = p_sem;
+END;
+/
+To call this procedure, you can use:
+sql
+Copy code
+BEGIN
+    update_marks(123, 101, 'Spring2024', 95);
+END;
+/
+This will update the marks of the student with regno 123 in course courseno 101 for the semester 'Spring2024' to 95.
+Summary
+•	Created the STUDENT, COURSE, and ENROLL tables.
+•	Displayed the total number of students registered for more than two courses in a specified department.
+•	Displayed the students who have secured the highest mark in each course.
+•	Listed the youngest student of each course in all departments.
+•	Developed a PL/SQL procedure to update the marks of a particular student in a specified semester.
+Let me know if you need further assistance!
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+10.	Create the student database with the following tables and do the following: mark_details(reg_no,name, mark1, mark2, mark3, total) dept_details (dept_no, dept_name, HOD) stud_details(reg_no,name, dob, address) i. Using alter command to assign foreign key in mark_details. ii. Display the address of the students who have secured the top three ranks. iii. Write a query to display the student details along with their department name from the dept_details table. iv. Write a PL/SQL procedure to update the grade according to the marks secured.
+ChatGPT
+ChatGPT
+Let's address each task for the student database step by step.
+Create the Tables
+First, let's create the necessary tables: mark_details, dept_details, and stud_details.
+sql
+Copy code
+CREATE TABLE mark_details (
+    reg_no INT PRIMARY KEY,
+    name VARCHAR(100),
+    mark1 INT,
+    mark2 INT,
+    mark3 INT,
+    total INT,
+    FOREIGN KEY (reg_no) REFERENCES stud_details(reg_no)
+);
+
+CREATE TABLE dept_details (
+    dept_no INT PRIMARY KEY,
+    dept_name VARCHAR(100),
+    HOD VARCHAR(100)
+);
+
+CREATE TABLE stud_details (
+    reg_no INT PRIMARY KEY,
+    name VARCHAR(100),
+    dob DATE,
+    address VARCHAR(200)
+);
+i. Using ALTER Command to Assign Foreign Key in mark_details
+To assign a foreign key in the mark_details table referencing reg_no in stud_details, you can use the following ALTER command:
+sql
+Copy code
+ALTER TABLE mark_details
+ADD CONSTRAINT fk_reg_no
+FOREIGN KEY (reg_no) REFERENCES stud_details(reg_no);
+ii. Display the Address of the Students Who Have Secured the Top Three Ranks
+Assuming the rank is determined by the total marks (highest total gets 1st rank), you can display the address of the top three students as follows:
+sql
+Copy code
+SELECT s.address
+FROM stud_details s
+JOIN (
+    SELECT reg_no, RANK() OVER (ORDER BY total DESC) AS rank
+    FROM mark_details
+) m ON s.reg_no = m.reg_no
+WHERE m.rank <= 3;
+iii. Write a Query to Display the Student Details Along with Their Department Name from the dept_details Table
+To display the student details along with their department name from the dept_details table, you can use the following query:
+sql
+Copy code
+SELECT s.reg_no, s.name, s.dob, s.address, d.dept_name
+FROM stud_details s
+JOIN mark_details m ON s.reg_no = m.reg_no
+JOIN dept_details d ON d.dept_no = m.dept_no;
+iv. Write a PL/SQL Procedure to Update the Grade According to the Marks Secured
+Assuming you have a grading system based on marks, here's a sample PL/SQL procedure to update the grade according to the marks secured:
+sql
+Copy code
+CREATE OR REPLACE PROCEDURE update_grade (
+    p_reg_no IN INT
+) AS
+    v_total_marks INT;
+    v_grade VARCHAR(10);
+BEGIN
+    SELECT total INTO v_total_marks
+    FROM mark_details
+    WHERE reg_no = p_reg_no;
+
+    IF v_total_marks >= 80 THEN
+        v_grade := 'A';
+    ELSIF v_total_marks >= 60 THEN
+        v_grade := 'B';
+    ELSIF v_total_marks >= 40 THEN
+        v_grade := 'C';
+    ELSE
+        v_grade := 'D';
+    END IF;
+
+    UPDATE mark_details
+    SET grade = v_grade
+    WHERE reg_no = p_reg_no;
+    
+    COMMIT;
+    
+    DBMS_OUTPUT.PUT_LINE('Grade updated successfully for student with reg_no: ' || p_reg_no);
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Student with reg_no ' || p_reg_no || ' not found.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error updating grade for student with reg_no: ' || p_reg_no);
+END;
+/
+To execute this procedure:
+sql
+Copy code
+BEGIN
+    update_grade(123); -- Replace 123 with the actual reg_no of the student
+END;
+/
+Summary
+•	Created the mark_details, dept_details, and stud_details tables.
+•	Used ALTER command to assign a foreign key in mark_details referencing reg_no in stud_details.
+•	Displayed the address of the students who have secured the top three ranks based on total marks.
+•	Wrote a query to display student details along with their department name from the dept_details table.
+•	Developed a PL/SQL procedure to update the grade according to the marks secured for a specific student.
+Feel free to adjust the queries and procedure according to your specific requirements or grading system. Let me know if you have any further questions!
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+12.	Consider the following database for a Banking Enterprise. Branch{branch_name, branch_city, assets) ACCOUNT(accno, branch_name, balance} Depositor {customer_name, accno) CUSTOMER(customer_name, customer_street, customer_city} Loan {loan_number, branch_name, amount} Borrower { customer_name, loan_number)} i. Create the above tables by properly specifying the primary keys and foreign keys and
+ii. enter at least five tuples for each relation. iii. Find all the customers who have at least two accounts at the main branch. iv. Find all the customers who have an account at all the branches located in a specific city. v. Demonstrate how you delete all account tuples at every branch located in a specific city.
+ChatGPT
+ChatGPT
+Let's address each part of the task step by step for the Banking Enterprise database.
+Create Tables with Primary Keys and Foreign Keys
+sql
+Copy code
+-- Branch table
+CREATE TABLE Branch (
+    branch_name VARCHAR(100) PRIMARY KEY,
+    branch_city VARCHAR(100),
+    assets DECIMAL(15, 2)
+);
+
+-- ACCOUNT table
+CREATE TABLE ACCOUNT (
+    accno INT PRIMARY KEY,
+    branch_name VARCHAR(100),
+    balance DECIMAL(15, 2),
+    FOREIGN KEY (branch_name) REFERENCES Branch(branch_name)
+);
+
+-- Depositor table
+CREATE TABLE Depositor (
+    customer_name VARCHAR(100),
+    accno INT,
+    PRIMARY KEY (customer_name, accno),
+    FOREIGN KEY (accno) REFERENCES ACCOUNT(accno)
+);
+
+-- CUSTOMER table
+CREATE TABLE CUSTOMER (
+    customer_name VARCHAR(100) PRIMARY KEY,
+    customer_street VARCHAR(200),
+    customer_city VARCHAR(100)
+);
+
+-- Loan table
+CREATE TABLE Loan (
+    loan_number INT PRIMARY KEY,
+    branch_name VARCHAR(100),
+    amount DECIMAL(15, 2),
+    FOREIGN KEY (branch_name) REFERENCES Branch(branch_name)
+);
+
+-- Borrower table
+CREATE TABLE Borrower (
+    customer_name VARCHAR(100),
+    loan_number INT,
+    PRIMARY KEY (customer_name, loan_number),
+    FOREIGN KEY (customer_name) REFERENCES CUSTOMER(customer_name),
+    FOREIGN KEY (loan_number) REFERENCES Loan(loan_number)
+);
+Enter At Least Five Tuples for Each Relation
+Let's insert some sample data into each table:
+sql
+Copy code
+-- Inserting data into Branch table
+INSERT INTO Branch (branch_name, branch_city, assets) VALUES
+('Main Branch', 'New York', 1500000.00),
+('Downtown Branch', 'New York', 900000.00),
+('Uptown Branch', 'New York', 1200000.00),
+('West End Branch', 'Los Angeles', 800000.00),
+('East Side Branch', 'Los Angeles', 1000000.00);
+
+-- Inserting data into ACCOUNT table
+INSERT INTO ACCOUNT (accno, branch_name, balance) VALUES
+(1001, 'Main Branch', 5000.00),
+(1002, 'Main Branch', 7000.00),
+(1003, 'Downtown Branch', 3000.00),
+(1004, 'Uptown Branch', 6000.00),
+(1005, 'Main Branch', 4000.00);
+
+-- Inserting data into Depositor table
+INSERT INTO Depositor (customer_name, accno) VALUES
+('John Doe', 1001),
+('John Doe', 1002),
+('Jane Smith', 1003),
+('Alice Johnson', 1004),
+('Bob Williams', 1005);
+
+-- Inserting data into CUSTOMER table
+INSERT INTO CUSTOMER (customer_name, customer_street, customer_city) VALUES
+('John Doe', '123 Main St', 'New York'),
+('Jane Smith', '456 Elm St', 'New York'),
+('Alice Johnson', '789 Oak St', 'Los Angeles'),
+('Bob Williams', '321 Pine St', 'New York'),
+('Charlie Brown', '654 Maple St', 'Los Angeles');
+
+-- Inserting data into Loan table
+INSERT INTO Loan (loan_number, branch_name, amount) VALUES
+(2001, 'Main Branch', 10000.00),
+(2002, 'Downtown Branch', 8000.00),
+(2003, 'Uptown Branch', 12000.00),
+(2004, 'West End Branch', 6000.00),
+(2005, 'East Side Branch', 9000.00);
+
+-- Inserting data into Borrower table
+INSERT INTO Borrower (customer_name, loan_number) VALUES
+('John Doe', 2001),
+('John Doe', 2003),
+('Jane Smith', 2002),
+('Alice Johnson', 2005),
+('Bob Williams', 2004);
+iii. Find All Customers Who Have at Least Two Accounts at the Main Branch
+To find all customers who have at least two accounts at the 'Main Branch':
+sql
+Copy code
+SELECT d.customer_name
+FROM Depositor d
+JOIN ACCOUNT a ON d.accno = a.accno
+WHERE a.branch_name = 'Main Branch'
+GROUP BY d.customer_name
+HAVING COUNT(*) >= 2;
+iv. Find All Customers Who Have an Account at All Branches Located in a Specific City
+To find all customers who have an account at all branches located in 'New York':
+sql
+Copy code
+SELECT d.customer_name
+FROM CUSTOMER c
+JOIN Depositor d ON c.customer_name = d.customer_name
+WHERE NOT EXISTS (
+    SELECT b.branch_name
+    FROM Branch b
+    WHERE b.branch_city = 'New York'
+    EXCEPT
+    SELECT a.branch_name
+    FROM ACCOUNT a
+    WHERE a.accno = d.accno
+);
+v. Demonstrate How You Delete All Account Tuples at Every Branch Located in a Specific City
+To delete all account tuples at every branch located in 'Los Angeles':
+sql
+Copy code
+DELETE FROM ACCOUNT
+WHERE branch_name IN (
+    SELECT branch_name
+    FROM Branch
+    WHERE branch_city = 'Los Angeles'
+);
+Summary
+•	Created tables Branch, ACCOUNT, Depositor, CUSTOMER, Loan, and Borrower with primary keys and foreign keys properly specified.
+•	Inserted sample data into each table.
+•	Performed queries to find customers with specific criteria, including those with multiple accounts and those with accounts in all branches of a specific city.
+•	Demonstrated how to delete account tuples at every branch located in a specific city.
+Adjust the SQL queries as needed based on your specific database structure and requirements. Let me know if you have any further questions!
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+13.	Consider the following database consisting of the following tables: Hostel (hno, hname, type [boys/girls]) Menu (hno, day, breakfast, lunch, dinner) Warden (wname, qual, hno) Student (sid, sname, gender, year, hno) i. Display the total number of girls and boys hostel in the college. ii. Display the menu in the hostel ‘x’ on Tuesday. iii. Display the number of wardens for each hostel.
+ChatGPT
+ChatGPT
+Let's address each part of the task step by step for the given database consisting of Hostel, Menu, Warden, and Student tables.
+Tables Creation
+First, let's create the tables with appropriate attributes and relationships.
+sql
+Copy code
+-- Hostel table
+CREATE TABLE Hostel (
+    hno INT PRIMARY KEY,
+    hname VARCHAR(100),
+    type VARCHAR(10) CHECK (type IN ('boys', 'girls'))
+);
+
+-- Menu table
+CREATE TABLE Menu (
+    hno INT,
+    day VARCHAR(10),
+    breakfast VARCHAR(100),
+    lunch VARCHAR(100),
+    dinner VARCHAR(100),
+    PRIMARY KEY (hno, day),
+    FOREIGN KEY (hno) REFERENCES Hostel(hno)
+);
+
+-- Warden table
+CREATE TABLE Warden (
+    wname VARCHAR(100),
+    qual VARCHAR(100),
+    hno INT,
+    PRIMARY KEY (wname, hno),
+    FOREIGN KEY (hno) REFERENCES Hostel(hno)
+);
+
+-- Student table
+CREATE TABLE Student (
+    sid INT PRIMARY KEY,
+    sname VARCHAR(100),
+    gender VARCHAR(10) CHECK (gender IN ('M', 'F')),
+    year INT,
+    hno INT,
+    FOREIGN KEY (hno) REFERENCES Hostel(hno)
+);
+i. Display the Total Number of Girls and Boys Hostel in the College
+To display the total number of girls and boys hostels:
+sql
+Copy code
+SELECT type, COUNT(*) AS count
+FROM Hostel
+GROUP BY type;
+ii. Display the Menu in the Hostel 'x' on Tuesday
+To display the menu in a specific hostel (for example, hostel 'x') on Tuesday:
+sql
+Copy code
+SELECT m.*
+FROM Menu m
+JOIN Hostel h ON m.hno = h.hno
+WHERE h.hname = 'x' AND m.day = 'Tuesday';
+iii. Display the Number of Wardens for Each Hostel
+To display the number of wardens for each hostel:
+sql
+Copy code
+SELECT h.hname, COUNT(w.wname) AS num_wardens
+FROM Hostel h
+LEFT JOIN Warden w ON h.hno = w.hno
+GROUP BY h.hname;
+Summary
+•	Created tables Hostel, Menu, Warden, and Student with appropriate attributes and relationships.
+•	Performed queries to display the total number of girls and boys hostels in the college, the menu in a specific hostel on a particular day, and the number of wardens for each hostel.
+Adjust the queries based on your specific requirements and data. Let me know if you need further assistance!
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+14.	Write a PL/SQL function to calculate the income tax for the given employee: Conditions: If pay <=2,50,000, no tax is charged. If pay is >=2,50,001 and <=5,00,000, 5% of pay is charged as tax. If pay is >= 5,00,001 and <=10,00,000, 20% of pay is charged as tax. If pay is >=10,00,001, 30% of pay is charged as tax.
+ChatGPT
+ChatGPT
+To write a PL/SQL function to calculate income tax based on the given conditions, you can follow these steps:
+1.	Create a Function: Define a PL/SQL function that takes the employee's pay as input and calculates the tax based on specified conditions.
+2.	Implement Conditions: Use IF-ELSIF statements to check the pay range and calculate the tax accordingly.
+3.	Return Tax Amount: Return the calculated tax amount from the function.
+Here's how you can implement it:
+sql
+Copy code
+CREATE OR REPLACE FUNCTION calculate_income_tax(pay IN NUMBER)
+RETURN NUMBER
+IS
+    tax_amount NUMBER := 0;
+BEGIN
+    IF pay <= 250000 THEN
+        tax_amount := 0;
+    ELSIF pay >= 250001 AND pay <= 500000 THEN
+        tax_amount := pay * 0.05;  -- 5% tax
+    ELSIF pay >= 500001 AND pay <= 1000000 THEN
+        tax_amount := pay * 0.2;   -- 20% tax
+    ELSE
+        tax_amount := pay * 0.3;   -- 30% tax
+    END IF;
+
+    RETURN tax_amount;
+END;
+/
+Explanation:
+•	Function Definition: calculate_income_tax is a function that accepts a parameter pay (employee's pay) and returns tax_amount.
+•	IF-ELSIF Statements: It checks different ranges of pay to determine the tax amount:
+o	If pay is less than or equal to 250,000, no tax is charged.
+o	If pay is between 250,001 and 500,000, 5% of pay is charged as tax.
+o	If pay is between 500,001 and 1,000,000, 20% of pay is charged as tax.
+o	If pay is greater than 1,000,000, 30% of pay is charged as tax.
+•	Return Statement: The calculated tax_amount is returned from the function.
+Usage Example:
+You can call this function in a SQL query or PL/SQL block to calculate the tax for a given employee's pay. Here's how you might use it:
+sql
+Copy code
+DECLARE
+    employee_pay NUMBER := 300000; -- Example pay amount
+    tax NUMBER;
+BEGIN
+    tax := calculate_income_tax(employee_pay);
+    DBMS_OUTPUT.PUT_LINE('Income Tax for pay ' || employee_pay || ' is: ' || tax);
+END;
+/
+This example declares employee_pay as 300,000 and calculates the income tax using the calculate_income_tax function. The result will be printed using DBMS_OUTPUT.PUT_LINE.
+Adjust the employee_pay value as per your test cases or actual data to verify the function's correctness. This function ensures that the tax calculation follows the specified conditions based on different income ranges.
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+15.	Create a table as book (sl.no, book_name, author_name,price, edition,publisher_name). Perform the following operations: i. Insert minimum ten tuples in book table ii. Commit the table book iii. Create a save point for the table book as B iv. Rollback the table book after inserting 4 & 5 row v. Define Grant & Revoke vi. Write a PL/SQL Trigger to verify the data before insertion on Book table
+ChatGPT
+ChatGPT
+Let's address each part of the task step by step for the book table operations.
+i. Insert Minimum Ten Tuples in book Table
+sql
+Copy code
+-- Assuming the table 'book' is already created
+INSERT INTO book (sl_no, book_name, author_name, price, edition, publisher_name) 
+VALUES
+(1, 'Book1', 'Author1', 20.00, '1st', 'Publisher1'),
+(2, 'Book2', 'Author2', 25.50, '2nd', 'Publisher2'),
+(3, 'Book3', 'Author3', 30.00, '3rd', 'Publisher3'),
+(4, 'Book4', 'Author4', 18.50, '1st', 'Publisher4'),
+(5, 'Book5', 'Author5', 22.75, '2nd', 'Publisher5'),
+(6, 'Book6', 'Author6', 27.00, '3rd', 'Publisher6'),
+(7, 'Book7', 'Author7', 21.25, '1st', 'Publisher7'),
+(8, 'Book8', 'Author8', 35.50, '2nd', 'Publisher8'),
+(9, 'Book9', 'Author9', 40.00, '3rd', 'Publisher9'),
+(10, 'Book10', 'Author10', 45.50, '1st', 'Publisher10');
+ii. Commit the Table book
+sql
+Copy code
+COMMIT;
+iii. Create a Savepoint for the Table book as B
+sql
+Copy code
+SAVEPOINT B;
+iv. Rollback the Table book After Inserting 4 & 5 Row
+Assuming you want to rollback up to the savepoint B after inserting rows 4 and 5:
+sql
+Copy code
+ROLLBACK TO SAVEPOINT B;
+This will rollback changes made after the savepoint B, effectively removing rows 4 and 5.
+v. Define Grant & Revoke
+Grant: Granting privileges allows a user to perform specified actions on database objects.
+sql
+Copy code
+-- Example: Granting SELECT privilege on book table to user 'user1'
+GRANT SELECT ON book TO user1;
+Revoke: Revoking privileges removes previously granted privileges from a user.
+sql
+Copy code
+-- Example: Revoking SELECT privilege on book table from user 'user1'
+REVOKE SELECT ON book FROM user1;
+vi. Write a PL/SQL Trigger to Verify the Data Before Insertion on Book Table
+Here's an example of a PL/SQL trigger that verifies data before insertion into the book table. This trigger checks if the price of the book being inserted is greater than 0.
+sql
+Copy code
+CREATE OR REPLACE TRIGGER verify_book_insert
+BEFORE INSERT ON book
+FOR EACH ROW
+BEGIN
+    IF :NEW.price <= 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Price of the book must be greater than 0.');
+    END IF;
+END;
+/
+Summary
+•	Inserted ten tuples into the book table.
+•	Committed the changes to make them permanent.
+•	Created a savepoint B for potential rollback.
+•	Rolled back to savepoint B to undo changes after inserting rows 4 and 5.
+•	Defined GRANT and REVOKE to manage privileges on database objects.
+•	Implemented a PL/SQL trigger verify_book_insert to enforce data validation rules before inserting into the book table.
+These operations cover basic database management tasks including data manipulation, transaction management, privilege management, and validation using triggers. Adjust the examples as per your specific requirements and database schema.
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+16.	An Electricity Board charges the following rates to domestic users to discourage large consumption of energy: For the first 1 - 200 units: {1 - 100 units = Rs. 1.00, 101 - 200 units = Rs.1.50} From 201 - 500 units: { 1 - 200 units = Rs. 2.00 and 201 - 500 units = Rs. 3.00} Above 500 units: {1 - 200 = Rs. 3.50, 201- 500 unit = Rs. 4.60 &above 500-unit Rs.6.60} Write a PL/SQL program to read the connection_id of users and number of units consumed, display the charges with names.
+ChatGPT
+ChatGPT
+To write a PL/SQL program that calculates electricity charges based on the units consumed by domestic users according to the given rates, follow these steps:
+PL/SQL Program to Calculate Electricity Charges
+sql
+Copy code
+-- Create a PL/SQL block to calculate electricity charges
+SET SERVEROUTPUT ON;  -- Enable output
+
+DECLARE
+    v_connection_id NUMBER;
+    v_units_consumed NUMBER;
+    v_charges NUMBER;
+    v_customer_name VARCHAR2(100);
+BEGIN
+    -- Assume you have a table CUSTOMER with columns connection_id, customer_name, units_consumed
+    
+    -- Input connection_id and units_consumed (you can replace with actual values or fetch from table)
+    v_connection_id := &connection_id;  -- Input connection_id here
+    v_units_consumed := &units_consumed;  -- Input units_consumed here
+    
+    -- Fetch customer_name based on connection_id (assuming it's in CUSTOMER table)
+    SELECT customer_name INTO v_customer_name
+    FROM CUSTOMER
+    WHERE connection_id = v_connection_id;
+    
+    -- Calculate charges based on units consumed
+    IF v_units_consumed <= 100 THEN
+        v_charges := v_units_consumed * 1.00;  -- Rs. 1.00 per unit for first 100 units
+    ELSIF v_units_consumed <= 200 THEN
+        v_charges := 100 * 1.00 + (v_units_consumed - 100) * 1.50;  -- Rs. 1.50 per unit for next 100 units
+    ELSIF v_units_consumed <= 500 THEN
+        v_charges := 100 * 1.00 + 100 * 1.50 + (v_units_consumed - 200) * 3.00;  -- Rs. 3.00 per unit for units beyond 200 up to 500
+    ELSE
+        v_charges := 100 * 1.00 + 100 * 1.50 + 300 * 3.00 + (v_units_consumed - 500) * 6.60;  -- Rs. 6.60 per unit for units above 500
+    END IF;
+    
+    -- Display the charges with customer name
+    DBMS_OUTPUT.PUT_LINE('Customer Name: ' || v_customer_name);
+    DBMS_OUTPUT.PUT_LINE('Units Consumed: ' || v_units_consumed);
+    DBMS_OUTPUT.PUT_LINE('Electricity Charges: Rs. ' || TO_CHAR(v_charges, '9999.99'));
+    
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Customer not found for connection ID: ' || v_connection_id);
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error occurred: ' || SQLERRM);
+END;
+/
+Explanation:
+1.	DECLARE: Declares variables v_connection_id (to store connection ID), v_units_consumed (to store units consumed), v_charges (to store calculated charges), and v_customer_name (to store customer name).
+2.	BEGIN-END: The main block where the program logic is implemented.
+3.	INPUTS: v_connection_id and v_units_consumed are assumed to be input parameters. You can replace &connection_id and &units_consumed with actual values or use them as input prompts (& symbol prompts for input in SQL*Plus environment).
+4.	SELECT INTO: Fetches customer_name based on connection_id from the CUSTOMER table.
+5.	IF-ELSIF-ELSE: Calculates v_charges based on the units consumed:
+o	For units <= 100: Rs. 1.00 per unit
+o	For units 101-200: Rs. 1.50 per unit
+o	For units 201-500: Rs. 3.00 per unit
+o	For units > 500: Rs. 6.60 per unit
+6.	DBMS_OUTPUT: Displays the customer name, units consumed, and calculated electricity charges.
+7.	EXCEPTION: Handles exceptions:
+o	NO_DATA_FOUND: If no customer found for the given connection_id.
+o	OTHERS: Handles any other exceptions and displays the error message.
+Usage:
+•	Replace CUSTOMER table and columns with your actual table and column names (connection_id, customer_name, units_consumed).
+•	Execute the PL/SQL block in SQL*Plus or any PL/SQL environment.
+•	Input connection_id and units_consumed when prompted or replace them with actual values for testing.
+This PL/SQL program will effectively calculate and display electricity charges based on the units consumed by domestic users according to the specified rates. Adjust the logic as per your specific requirements or additional conditions if needed.
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+17.	Create a table salesman {salesman_id, name, city, commission} and customer {customer_id, name, city, grade, slaesman_id}. Write the following query: i. Create a view for those salesmen belongs to the city New York ii. Create a view for all salesmen with columns salesman_id, name, and city iii. Find the salesmen of the city New York who achieved the commission more than 13%. iv. Create a view to getting a count of how many customers we have at each level of a grade.
+ChatGPT
+ChatGPT
+To accomplish the tasks using SQL queries and views with the salesman and customer tables, let's go through each requirement step by step.
+Assumptions:
+Assuming the tables salesman and customer are already created with appropriate columns (salesman_id, name, city, commission for salesman and customer_id, name, city, grade, salesman_id for customer).
+i. Create a View for Salesmen Belongs to the City New York
+sql
+Copy code
+CREATE VIEW Salesmen_NewYork AS
+SELECT salesman_id, name, city
+FROM salesman
+WHERE city = 'New York';
+ii. Create a View for All Salesmen with Columns Salesman_id, Name, and City
+sql
+Copy code
+CREATE VIEW All_Salesmen AS
+SELECT salesman_id, name, city
+FROM salesman;
+iii. Find the Salesmen of the City New York Who Achieved Commission More Than 13%
+sql
+Copy code
+CREATE VIEW HighCommission_Salesmen_NewYork AS
+SELECT salesman_id, name, city, commission
+FROM salesman
+WHERE city = 'New York' AND commission > 13;
+iv. Create a View to Get a Count of How Many Customers We Have at Each Level of a Grade
+sql
+Copy code
+CREATE VIEW Customer_Grade_Count AS
+SELECT grade, COUNT(*) AS customer_count
+FROM customer
+GROUP BY grade;
+Explanation:
+•	View Creation: Views are virtual tables that can be queried like regular tables but do not store data independently.
+•	Query Logic: Each query addresses the specific requirements by filtering or aggregating data based on the conditions provided.
+•	Views Usage: Views simplify complex queries and can be used by applications or other queries without needing to rewrite the logic.
+Usage Examples:
+After creating these views, you can query them like tables:
+1.	Query Salesmen_NewYork view:
+sql
+Copy code
+SELECT * FROM Salesmen_NewYork;
+2.	Query HighCommission_Salesmen_NewYork view:
+sql
+Copy code
+SELECT * FROM HighCommission_Salesmen_NewYork;
+3.	Query Customer_Grade_Count view:
+sql
+Copy code
+SELECT * FROM Customer_Grade_Count;
+Notes:
+•	Adjust column names (salesman_id, name, city, commission, customer_id, grade) according to your actual table schema.
+•	Views provide a convenient way to encapsulate complex queries or commonly used subsets of data.
+•	Ensure appropriate permissions are set for creating views and accessing underlying tables.
+By using views, you can efficiently manage and query data subsets without duplicating complex SQL logic throughout your application or reporting queries. Adjust the queries based on your specific schema and data requirements.
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+18.	Create a table ‘Student’ with the following details (table level constraints) Rollno number(5) Primary key Name varchar2(10) Coursecode number(2) Foreign key (Reference ‘Course’ table) Mark1 number(3) Check whether values range from 0 to 100 Mark2 number(3) Check whether values range from 0 to 100 Create a table ‘Course’ with the following details (table level constraints) Ccode number(2) Primary key Course varchar2(10) i. Add the field total to table student ii. Insert 5 records into the table. iii. List the student name with the highest mark1 iv. Write a PL/SQL function to find the factorial of a given number
+ChatGPT
+ChatGPT
+Let's address each part of the task step by step for creating the Student and Course tables, and performing the operations specified.
+Step 1: Create Tables with Constraints
+sql
+Copy code
+-- Create Course table
+CREATE TABLE Course (
+    Ccode NUMBER(2) PRIMARY KEY,
+    Course VARCHAR2(10)
+);
+
+-- Create Student table
+CREATE TABLE Student (
+    Rollno NUMBER(5) PRIMARY KEY,
+    Name VARCHAR2(10),
+    Coursecode NUMBER(2),
+    Mark1 NUMBER(3) CHECK (Mark1 >= 0 AND Mark1 <= 100),
+    Mark2 NUMBER(3) CHECK (Mark2 >= 0 AND Mark2 <= 100),
+    Total NUMBER(3),  -- Added field for total marks
+    CONSTRAINT fk_coursecode FOREIGN KEY (Coursecode) REFERENCES Course(Ccode)
+);
+Step 2: Add the Field Total to the Student Table
+sql
+Copy code
+ALTER TABLE Student ADD (Total NUMBER(3));
+Step 3: Insert 5 Records into the Student Table
+sql
+Copy code
+-- Assuming Course table already has some records with valid Ccode values
+
+-- Insert records into Course table (example)
+INSERT INTO Course (Ccode, Course) VALUES (1, 'Math'), (2, 'Science'), (3, 'History');
+
+-- Insert records into Student table
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2)
+VALUES
+(1, 'John', 1, 85, 90),
+(2, 'Jane', 2, 78, 85),
+(3, 'Doe', 1, 92, 88),
+(4, 'Smith', 3, 80, 95),
+(5, 'Alice', 2, 88, 82);
+Step 4: List the Student Name with the Highest Mark1
+sql
+Copy code
+SELECT Name
+FROM Student
+WHERE Mark1 = (SELECT MAX(Mark1) FROM Student);
+Step 5: Write a PL/SQL Function to Find the Factorial of a Given Number
+sql
+Copy code
+-- Create or replace PL/SQL function for factorial calculation
+CREATE OR REPLACE FUNCTION factorial(n IN NUMBER)
+RETURN NUMBER
+IS
+    result NUMBER := 1;
+BEGIN
+    FOR i IN 1..n LOOP
+        result := result * i;
+    END LOOP;
+    RETURN result;
+END;
+/
+Explanation:
+•	Table Creation: Course and Student tables are created with appropriate data types and constraints (PRIMARY KEY, FOREIGN KEY, CHECK constraints).
+•	Alter Table: ALTER TABLE Student ADD (Total NUMBER(3)); adds the Total field to the Student table.
+•	Insert Records: Example INSERT INTO statements demonstrate how to insert data into the Course and Student tables.
+•	Query: SELECT Name FROM Student WHERE Mark1 = (SELECT MAX(Mark1) FROM Student); retrieves the name of the student with the highest Mark1.
+•	PL/SQL Function: factorial function calculates the factorial of a given number n.
+Usage:
+•	Execute the SQL commands in a SQL execution environment (like SQL*Plus or SQL Developer).
+•	Adjust values and queries based on your specific requirements and existing data in the Course and Student tables.
+These steps cover basic SQL operations and PL/SQL function creation, tailored to your specified schema and requirements. Adjustments may be necessary depending on additional constraints or specific business logic.
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+reate a table member with the following fields member code, member name, phoneno. Create a table book with the following fields bookcode, category code, bookname, cost. Create a table issue with the following fields membercode, Book code, Issuedate, Returndate. i. List all the members names who have taken the book on 8-10-2007. ii. List the member codes of the members who have taken books worth more than Rs. 400.00. iii. Write a PL/SQL block to generate the Fibonacci series
+ChatGPT
+ChatGPT
+To address the requirements based on the tables member, book, and issue, let's go through each part step by step.
+Step 1: Create Tables
+sql
+Copy code
+-- Create Member table
+CREATE TABLE Member (
+    MemberCode NUMBER PRIMARY KEY,
+    MemberName VARCHAR2(50),
+    PhoneNo VARCHAR2(15)
+);
+
+-- Create Book table
+CREATE TABLE Book (
+    BookCode NUMBER PRIMARY KEY,
+    CategoryCode NUMBER,
+    BookName VARCHAR2(100),
+    Cost NUMBER(8, 2)  -- Assuming cost is in rupees
+);
+
+-- Create Issue table
+CREATE TABLE Issue (
+    MemberCode NUMBER,
+    BookCode NUMBER,
+    IssueDate DATE,
+    ReturnDate DATE,
+    CONSTRAINT fk_membercode FOREIGN KEY (MemberCode) REFERENCES Member(MemberCode),
+    CONSTRAINT fk_bookcode FOREIGN KEY (BookCode) REFERENCES Book(BookCode)
+);
+Step 2: Insert Sample Data (for illustration purposes)
+sql
+Copy code
+-- Insert into Member table
+INSERT INTO Member (MemberCode, MemberName, PhoneNo)
+VALUES
+(1, 'John Doe', '1234567890'),
+(2, 'Jane Smith', '9876543210'),
+(3, 'Alice Johnson', '9998887770');
+
+-- Insert into Book table
+INSERT INTO Book (BookCode, CategoryCode, BookName, Cost)
+VALUES
+(101, 1, 'Book1', 300.00),
+(102, 2, 'Book2', 450.00),
+(103, 1, 'Book3', 350.00),
+(104, 3, 'Book4', 500.00),
+(105, 2, 'Book5', 380.00);
+
+-- Insert into Issue table
+-- Example: Assuming Member with MemberCode 1 issued Book with BookCode 102 on 8th October 2007
+INSERT INTO Issue (MemberCode, BookCode, IssueDate, ReturnDate)
+VALUES (1, 102, TO_DATE('2007-10-08', 'YYYY-MM-DD'), NULL);
+Step 3: Queries
+i. List All the Members Names Who Have Taken the Book on 8-10-2007
+sql
+Copy code
+SELECT m.MemberName
+FROM Member m
+JOIN Issue i ON m.MemberCode = i.MemberCode
+WHERE TRUNC(i.IssueDate) = TO_DATE('2007-10-08', 'YYYY-MM-DD');
+ii. List the Member Codes of the Members Who Have Taken Books Worth More Than Rs. 400.00
+sql
+Copy code
+SELECT DISTINCT i.MemberCode
+FROM Issue i
+JOIN Book b ON i.BookCode = b.BookCode
+WHERE b.Cost > 400.00;
+Step 4: PL/SQL Block to Generate Fibonacci Series
+sql
+Copy code
+-- PL/SQL Block to generate Fibonacci series
+SET SERVEROUTPUT ON;
+
+DECLARE
+    n NUMBER := 10;  -- Number of Fibonacci numbers to generate
+    first_number NUMBER := 0;
+    second_number NUMBER := 1;
+    next_number NUMBER;
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Fibonacci Series:');
+    DBMS_OUTPUT.PUT_LINE(first_number);  -- Print first number
+    
+    FOR i IN 2..n LOOP
+        next_number := first_number + second_number;
+        DBMS_OUTPUT.PUT_LINE(next_number);  -- Print Fibonacci number
+        first_number := second_number;
+        second_number := next_number;
+    END LOOP;
+END;
+/
+Explanation:
+•	Table Creation: Member, Book, and Issue tables are created with appropriate columns and constraints (PRIMARY KEY and FOREIGN KEY constraints).
+•	Sample Data Insertion: Inserts sample data into the tables to demonstrate the queries.
+•	Queries: SQL queries retrieve information based on specified conditions.
+•	PL/SQL Block: Generates a Fibonacci series up to a specified number (n) using a loop and DBMS_OUTPUT.PUT_LINE to display the series.
+Usage:
+•	Execute each SQL statement in a SQL execution environment (like SQL*Plus or SQL Developer) to create tables, insert data, and run queries.
+•	Adjust column names (MemberCode, MemberName, PhoneNo, BookCode, CategoryCode, BookName, Cost, IssueDate, ReturnDate) as per your actual schema.
+•	Modify the PL/SQL block for Fibonacci series generation based on your specific requirements or number of Fibonacci numbers needed.
+This approach covers basic SQL operations and PL/SQL programming for your specified database schema. Adjust the examples according to your exact requirements and expand functionality as needed.
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+20.	Create a table vendor_master with the following fields Vencode varchar2(5) Venname varchar2(15) Venadd1 varchar2(30) Venadd2 varchar2(30) Venadd3 varchar2(30) i. Change the address of the vendor with Vendor code ‘V002’ in Vendor_master ii. Display the next occurrence of ‘Friday’ to the current date. iii. Find the total number of vendors. iv. List the vendor names start with the letter ‘A’. v. Write a PL/SQL block to find whether the given number is odd or even
+ChatGPT
+ChatGPT
+To address the tasks related to the vendor_master table and additional PL/SQL operations, let's proceed step by step.
+Step 1: Create the vendor_master Table
+sql
+Copy code
+CREATE TABLE vendor_master (
+    Vencode VARCHAR2(5),
+    Venname VARCHAR2(15),
+    Venadd1 VARCHAR2(30),
+    Venadd2 VARCHAR2(30),
+    Venadd3 VARCHAR2(30)
+);
+Step 2: Insert Sample Data (for illustration purposes)
+sql
+Copy code
+-- Inserting sample data into vendor_master
+INSERT INTO vendor_master (Vencode, Venname, Venadd1, Venadd2, Venadd3)
+VALUES
+('V001', 'Vendor1', 'Address1', 'City1', 'Country1'),
+('V002', 'Vendor2', 'Address2', 'City2', 'Country2'),
+('V003', 'Vendor3', 'Address3', 'City3', 'Country3'),
+('V004', 'ABC Corp', 'Address4', 'City4', 'Country4'),
+('V005', 'Alpha Inc', 'Address5', 'City5', 'Country5');
+i. Change the Address of the Vendor with Vendor Code 'V002'
+sql
+Copy code
+UPDATE vendor_master
+SET Venadd1 = 'New Address',
+    Venadd2 = 'New City',
+    Venadd3 = 'New Country'
+WHERE Vencode = 'V002';
+ii. Display the Next Occurrence of 'Friday' to the Current Date
+sql
+Copy code
+SELECT NEXT_DAY(SYSDATE, 'FRIDAY') AS Next_Friday
+FROM dual;
+iii. Find the Total Number of Vendors
+sql
+Copy code
+SELECT COUNT(*) AS Total_Vendors
+FROM vendor_master;
+iv. List the Vendor Names Starting with the Letter 'A'
+sql
+Copy code
+SELECT Venname
+FROM vendor_master
+WHERE Venname LIKE 'A%';
+v. Write a PL/SQL Block to Determine Whether a Given Number is Odd or Even
+sql
+Copy code
+-- PL/SQL Block to check if a number is odd or even
+DECLARE
+    v_number NUMBER := 15;  -- Change this number to test different values
+    
+BEGIN
+    IF MOD(v_number, 2) = 0 THEN
+        DBMS_OUTPUT.PUT_LINE(v_number || ' is even');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE(v_number || ' is odd');
+    END IF;
+END;
+/
+Explanation:
+•	Table Creation and Data Insertion: Creates the vendor_master table and inserts sample data to demonstrate the operations.
+•	Update Operation: Updates the address fields for the vendor with code V002.
+•	Date Function: Uses NEXT_DAY function to find the next occurrence of 'Friday' relative to the current date.
+•	Count Query: Retrieves the total number of vendors in the vendor_master table.
+•	LIKE Operator: Retrieves vendor names that start with the letter 'A'.
+•	PL/SQL Block: Checks whether a given number (v_number) is odd or even using the MOD function.
+Usage:
+•	Execute each SQL statement or PL/SQL block in a SQL execution environment (like SQL*Plus or SQL Developer).
+•	Modify values and conditions (Vencode, Venname, v_number, etc.) as per your actual data and requirements.
+•	Ensure DBMS_OUTPUT.PUT_LINE statements are visible (output enabled) in your SQL environment to see PL/SQL block results.
+This approach covers basic SQL operations and PL/SQL programming for your specified tasks related to the vendor_master table and additional requirements. Adjustments can be made based on specific business logic or schema requirements.
+
+Sign up to chat
+
+Report content|Terms of use|Privacy policy|
+?
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+21.	Create a table ‘Student’ with the following details (table level constraints) Rollno number(5) Primary key Name varchar2(10) Coursecode number(2) Foreign key (Reference ‘Course’ table) Mark1 number(3) Check whether values range from 0 to 100 Mark2 number(3) Check whether values range from 0 to 100 Create a table ‘Course’ with the following details (table level constraints) Ccode number(2) Primary key Course varchar2(10) i. Add the field total to table student ii. List the student names starting with the letter ‘S’. iii. Update the total field by adding Mark1 and Mark2 iv. Write a PL/SQL block to find whether the given year is leap year or not in SQL code
+ChatGPT
+ChatGPT
+Sure, let's break down each task into the respective SQL commands and PL/SQL blocks.
+Step 1: Create Tables Student and Course
+1.	Create Course table:
+sql
+Copy code
+CREATE TABLE Course (
+    Ccode NUMBER(2) PRIMARY KEY,
+    Course VARCHAR2(10)
+);
+2.	Create Student table with table-level constraints:
+sql
+Copy code
+CREATE TABLE Student (
+    Rollno NUMBER(5) PRIMARY KEY,
+    Name VARCHAR2(10),
+    Coursecode NUMBER(2),
+    Mark1 NUMBER(3) CHECK (Mark1 BETWEEN 0 AND 100),
+    Mark2 NUMBER(3) CHECK (Mark2 BETWEEN 0 AND 100),
+    CONSTRAINT fk_course FOREIGN KEY (Coursecode) REFERENCES Course(Ccode)
+);
+Step 2: Add the field total to the Student table
+sql
+Copy code
+ALTER TABLE Student ADD total NUMBER(3);
+Step 3: List the student names starting with the letter ‘S’
+sql
+Copy code
+SELECT Name
+FROM Student
+WHERE Name LIKE 'S%';
+Step 4: Update the total field by adding Mark1 and Mark2
+sql
+Copy code
+UPDATE Student
+SET total = Mark1 + Mark2;
+Step 5: Write a PL/SQL block to find whether the given year is a leap year or not
+Here's a PL/SQL block to determine if a given year is a leap year:
+sql
+Copy code
+DECLARE
+    given_year NUMBER := &year; -- Replace &year with the year you want to check
+    is_leap_year VARCHAR2(5);
+BEGIN
+    IF (MOD(given_year, 4) = 0 AND MOD(given_year, 100) != 0) OR (MOD(given_year, 400) = 0) THEN
+        is_leap_year := 'Yes';
+    ELSE
+        is_leap_year := 'No';
+    END IF;
+    DBMS_OUTPUT.PUT_LINE('Year ' || given_year || ' is a leap year: ' || is_leap_year);
+END;
+Complete SQL Code Example
+Combining all the steps together:
+sql
+Copy code
+-- Step 1: Create Tables
+CREATE TABLE Course (
+    Ccode NUMBER(2) PRIMARY KEY,
+    Course VARCHAR2(10)
+);
+
+CREATE TABLE Student (
+    Rollno NUMBER(5) PRIMARY KEY,
+    Name VARCHAR2(10),
+    Coursecode NUMBER(2),
+    Mark1 NUMBER(3) CHECK (Mark1 BETWEEN 0 AND 100),
+    Mark2 NUMBER(3) CHECK (Mark2 BETWEEN 0 AND 100),
+    CONSTRAINT fk_course FOREIGN KEY (Coursecode) REFERENCES Course(Ccode)
+);
+
+-- Step 2: Add the field total to the Student table
+ALTER TABLE Student ADD total NUMBER(3);
+
+-- Step 3: List the student names starting with the letter ‘S’
+SELECT Name
+FROM Student
+WHERE Name LIKE 'S%';
+
+-- Step 4: Update the total field by adding Mark1 and Mark2
+UPDATE Student
+SET total = Mark1 + Mark2;
+
+-- Step 5: PL/SQL block to find whether the given year is a leap year or not
+DECLARE
+    given_year NUMBER := &year; -- Replace &year with the year you want to check
+    is_leap_year VARCHAR2(5);
+BEGIN
+    IF (MOD(given_year, 4) = 0 AND MOD(given_year, 100) != 0) OR (MOD(given_year, 400) = 0) THEN
+        is_leap_year := 'Yes';
+    ELSE
+        is_leap_year := 'No';
+    END IF;
+    DBMS_OUTPUT.PUT_LINE('Year ' || given_year || ' is a leap year: ' || is_leap_year);
+END;
+In the PL/SQL block, replace &year with the actual year you want to check. When running in a tool like SQL*Plus or SQL Developer, &year will prompt for user input, which can be directly substituted with a specific year if needed.
+Anonymous
+Create a table ‘Employee’ with the following details(Column level constraints) Empno Number(5) Primary key Empname Varchar2(20) Designation Varchar2(10) Date_of_join Date Salary Number(9,2) NOT NULL Depno Number(2) Foreign key(Reference ‘Department’ table) Create another table called ‘Department’ with the following structure(Column level constraints) Depno Number(2) Primary key Depname Varchar2(15) Deplocation Varchar2(10) i. Display the number of employees in each department with the department numbers in descending order ii. Display designation, department no and total number of employees designation wise and department wise. iii. List the Employee names and their department names.(Use Outer join) iv. Write a database trigger before insert or update for each row on the table employee not allowing to enter salary > 25,000 sql code
+ChatGPT
+ChatGPT
+Let's break down each part of the requirements into SQL commands and PL/SQL blocks.
+Step 1: Create Tables Employee and Department
+1.	Create Department table:
+sql
+Copy code
+CREATE TABLE Department (
+    Depno NUMBER(2) PRIMARY KEY,
+    Depname VARCHAR2(15),
+    Deplocation VARCHAR2(10)
+);
+2.	Create Employee table with column-level constraints:
+sql
+Copy code
+CREATE TABLE Employee (
+    Empno NUMBER(5) PRIMARY KEY,
+    Empname VARCHAR2(20),
+    Designation VARCHAR2(10),
+    Date_of_join DATE,
+    Salary NUMBER(9,2) NOT NULL,
+    Depno NUMBER(2),
+    CONSTRAINT fk_department FOREIGN KEY (Depno) REFERENCES Department(Depno)
+);
+Step 2: Display the number of employees in each department with the department numbers in descending order
+sql
+Copy code
+SELECT Depno, COUNT(Empno) AS Num_Employees
+FROM Employee
+GROUP BY Depno
+ORDER BY Depno DESC;
+Step 3: Display designation, department no, and total number of employees designation-wise and department-wise
+sql
+Copy code
+SELECT Designation, Depno, COUNT(Empno) AS Num_Employees
+FROM Employee
+GROUP BY Designation, Depno
+ORDER BY Depno, Designation;
+Step 4: List the Employee names and their department names (Use Outer join)
+sql
+Copy code
+SELECT E.Empname, D.Depname
+FROM Employee E
+LEFT JOIN Department D ON E.Depno = D.Depno;
+Step 5: Write a database trigger before insert or update for each row on the table employee not allowing to enter salary > 25,000
+sql
+Copy code
+CREATE OR REPLACE TRIGGER check_salary
+BEFORE INSERT OR UPDATE ON Employee
+FOR EACH ROW
+BEGIN
+    IF :NEW.Salary > 25000 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Salary cannot be greater than 25,000');
+    END IF;
+END;
+Complete SQL Code Example
+Combining all the steps together:
+sql
+Copy code
+-- Step 1: Create Tables
+
+CREATE TABLE Department (
+    Depno NUMBER(2) PRIMARY KEY,
+    Depname VARCHAR2(15),
+    Deplocation VARCHAR2(10)
+);
+
+CREATE TABLE Employee (
+    Empno NUMBER(5) PRIMARY KEY,
+    Empname VARCHAR2(20),
+    Designation VARCHAR2(10),
+    Date_of_join DATE,
+    Salary NUMBER(9,2) NOT NULL,
+    Depno NUMBER(2),
+    CONSTRAINT fk_department FOREIGN KEY (Depno) REFERENCES Department(Depno)
+);
+
+-- Step 2: Display the number of employees in each department with the department numbers in descending order
+SELECT Depno, COUNT(Empno) AS Num_Employees
+FROM Employee
+GROUP BY Depno
+ORDER BY Depno DESC;
+
+-- Step 3: Display designation, department no and total number of employees designation wise and department wise.
+SELECT Designation, Depno, COUNT(Empno) AS Num_Employees
+FROM Employee
+GROUP BY Designation, Depno
+ORDER BY Depno, Designation;
+
+-- Step 4: List the Employee names and their department names (Use Outer join)
+SELECT E.Empname, D.Depname
+FROM Employee E
+LEFT JOIN Department D ON E.Depno = D.Depno;
+
+-- Step 5: Trigger to prevent salary > 25,000
+CREATE OR REPLACE TRIGGER check_salary
+BEFORE INSERT OR UPDATE ON Employee
+FOR EACH ROW
+BEGIN
+    IF :NEW.Salary > 25000 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Salary cannot be greater than 25,000');
+    END IF;
+END;
+These commands create the necessary tables, execute the required queries, and implement the trigger as per the given requirements.
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+23.	Create a table itemfile with the following fields Itemcode varchar2(5) Itemdesc varchar2(30) P_category varchar2(30) (Spares, Accessories) Qty_hand number(5) Re_level number(5) Maxlevel number(5) Itemrate number(9,2) i. Display the quantity required (maxlevel – Qtyhand) of each item under the category of spares to reach the maximum level ii. Find the item with maximum rate in each product category iii. Find the items whose quantity in hand is less than the maximum level for the ‘spares’ category iv. Find the total number of items under ‘Accessories’ category. v. Write a PL/SQL block to display a particular item details. Display appropriate message if the item is not found sql code
+ChatGPT
+ChatGPT
+Step 1: Create Table itemfile
+sql
+Copy code
+CREATE TABLE itemfile (
+    Itemcode VARCHAR2(5),
+    Itemdesc VARCHAR2(30),
+    P_category VARCHAR2(30) CHECK (P_category IN ('Spares', 'Accessories')),
+    Qty_hand NUMBER(5),
+    Re_level NUMBER(5),
+    Maxlevel NUMBER(5),
+    Itemrate NUMBER(9,2),
+    PRIMARY KEY (Itemcode)
+);
+Step 2: Display the quantity required (maxlevel – Qtyhand) of each item under the category of spares to reach the maximum level
+sql
+Copy code
+SELECT Itemcode, Itemdesc, Maxlevel - Qty_hand AS Quantity_Required
+FROM itemfile
+WHERE P_category = 'Spares';
+Step 3: Find the item with maximum rate in each product category
+sql
+Copy code
+SELECT P_category, Itemcode, Itemdesc, Itemrate
+FROM itemfile
+WHERE (P_category, Itemrate) IN (
+    SELECT P_category, MAX(Itemrate)
+    FROM itemfile
+    GROUP BY P_category
+);
+Step 4: Find the items whose quantity in hand is less than the maximum level for the ‘spares’ category
+sql
+Copy code
+SELECT Itemcode, Itemdesc, Qty_hand, Maxlevel
+FROM itemfile
+WHERE P_category = 'Spares' AND Qty_hand < Maxlevel;
+Step 5: Find the total number of items under ‘Accessories’ category
+sql
+Copy code
+SELECT COUNT(*) AS Total_Items
+FROM itemfile
+WHERE P_category = 'Accessories';
+Step 6: Write a PL/SQL block to display a particular item details. Display appropriate message if the item is not found
+sql
+Copy code
+DECLARE
+    v_itemcode itemfile.Itemcode%TYPE := '&itemcode';  -- Replace &itemcode with the desired item code when running
+    v_itemdesc itemfile.Itemdesc%TYPE;
+    v_p_category itemfile.P_category%TYPE;
+    v_qty_hand itemfile.Qty_hand%TYPE;
+    v_re_level itemfile.Re_level%TYPE;
+    v_maxlevel itemfile.Maxlevel%TYPE;
+    v_itemrate itemfile.Itemrate%TYPE;
+BEGIN
+    BEGIN
+        SELECT Itemdesc, P_category, Qty_hand, Re_level, Maxlevel, Itemrate
+        INTO v_itemdesc, v_p_category, v_qty_hand, v_re_level, v_maxlevel, v_itemrate
+        FROM itemfile
+        WHERE Itemcode = v_itemcode;
+        
+        DBMS_OUTPUT.PUT_LINE('Item Code: ' || v_itemcode);
+        DBMS_OUTPUT.PUT_LINE('Item Description: ' || v_itemdesc);
+        DBMS_OUTPUT.PUT_LINE('Product Category: ' || v_p_category);
+        DBMS_OUTPUT.PUT_LINE('Quantity on Hand: ' || v_qty_hand);
+        DBMS_OUTPUT.PUT_LINE('Reorder Level: ' || v_re_level);
+        DBMS_OUTPUT.PUT_LINE('Maximum Level: ' || v_maxlevel);
+        DBMS_OUTPUT.PUT_LINE('Item Rate: ' || v_itemrate);
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('Item with code ' || v_itemcode || ' not found.');
+    END;
+END;
+Complete SQL Code Example
+Combining all the steps together:
+sql
+Copy code
+-- Step 1: Create Table
+CREATE TABLE itemfile (
+    Itemcode VARCHAR2(5),
+    Itemdesc VARCHAR2(30),
+    P_category VARCHAR2(30) CHECK (P_category IN ('Spares', 'Accessories')),
+    Qty_hand NUMBER(5),
+    Re_level NUMBER(5),
+    Maxlevel NUMBER(5),
+    Itemrate NUMBER(9,2),
+    PRIMARY KEY (Itemcode)
+);
+
+-- Step 2: Display the quantity required (maxlevel – Qtyhand) of each item under the category of spares to reach the maximum level
+SELECT Itemcode, Itemdesc, Maxlevel - Qty_hand AS Quantity_Required
+FROM itemfile
+WHERE P_category = 'Spares';
+
+-- Step 3: Find the item with maximum rate in each product category
+SELECT P_category, Itemcode, Itemdesc, Itemrate
+FROM itemfile
+WHERE (P_category, Itemrate) IN (
+    SELECT P_category, MAX(Itemrate)
+    FROM itemfile
+    GROUP BY P_category
+);
+
+-- Step 4: Find the items whose quantity in hand is less than the maximum level for the ‘spares’ category
+SELECT Itemcode, Itemdesc, Qty_hand, Maxlevel
+FROM itemfile
+WHERE P_category = 'Spares' AND Qty_hand < Maxlevel;
+
+-- Step 5: Find the total number of items under ‘Accessories’ category
+SELECT COUNT(*) AS Total_Items
+FROM itemfile
+WHERE P_category = 'Accessories';
+
+-- Step 6: PL/SQL block to display item details
+DECLARE
+    v_itemcode itemfile.Itemcode%TYPE := '&itemcode';  -- Replace &itemcode with the desired item code when running
+    v_itemdesc itemfile.Itemdesc%TYPE;
+    v_p_category itemfile.P_category%TYPE;
+    v_qty_hand itemfile.Qty_hand%TYPE;
+    v_re_level itemfile.Re_level%TYPE;
+    v_maxlevel itemfile.Maxlevel%TYPE;
+    v_itemrate itemfile.Itemrate%TYPE;
+BEGIN
+    BEGIN
+        SELECT Itemdesc, P_category, Qty_hand, Re_level, Maxlevel, Itemrate
+        INTO v_itemdesc, v_p_category, v_qty_hand, v_re_level, v_maxlevel, v_itemrate
+        FROM itemfile
+        WHERE Itemcode = v_itemcode;
+        
+        DBMS_OUTPUT.PUT_LINE('Item Code: ' || v_itemcode);
+        DBMS_OUTPUT.PUT_LINE('Item Description: ' || v_itemdesc);
+        DBMS_OUTPUT.PUT_LINE('Product Category: ' || v_p_category);
+        DBMS_OUTPUT.PUT_LINE('Quantity on Hand: ' || v_qty_hand);
+        DBMS_OUTPUT.PUT_LINE('Reorder Level: ' || v_re_level);
+        DBMS_OUTPUT.PUT_LINE('Maximum Level: ' || v_maxlevel);
+        DBMS_OUTPUT.PUT_LINE('Item Rate: ' || v_itemrate);
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('Item with code ' || v_itemcode || ' not found.');
+    END;
+END;
+These commands create the necessary table, execute the required queries, and implement the PL/SQL block as per the given requirements.
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+24.	Create a table member with the following fields member code, member name, phoneno. Create a table book with the following fields bookcode, category code, bookname, cost. Create a table issue with the following fields membercode, Book code, Issuedate, Returndate. i. List all the members names who have taken the book on 8-10-2007. ii. Find the total cost of books category wise. iii. Write a PL/SQL block to find whether the given number is odd or even. iv. Write a PL/SQL block to display a particular book details. Display appropriate message if the book is not found. SQL code
+ChatGPT
+ChatGPT
+Step 1: Create Tables
+sql
+Copy code
+-- Create Table member
+CREATE TABLE member (
+    member_code VARCHAR2(5) PRIMARY KEY,
+    member_name VARCHAR2(30),
+    phoneno VARCHAR2(15)
+);
+
+-- Create Table book
+CREATE TABLE book (
+    bookcode VARCHAR2(5) PRIMARY KEY,
+    category_code VARCHAR2(5),
+    bookname VARCHAR2(50),
+    cost NUMBER(9,2)
+);
+
+-- Create Table issue
+CREATE TABLE issue (
+    membercode VARCHAR2(5),
+    bookcode VARCHAR2(5),
+    issuedate DATE,
+    returndate DATE,
+    PRIMARY KEY (membercode, bookcode, issuedate),
+    FOREIGN KEY (membercode) REFERENCES member(member_code),
+    FOREIGN KEY (bookcode) REFERENCES book(bookcode)
+);
+Step 2: List all the members' names who have taken the book on 8-10-2007
+sql
+Copy code
+SELECT m.member_name
+FROM member m
+JOIN issue i ON m.member_code = i.membercode
+WHERE i.issuedate = TO_DATE('08-10-2007', 'DD-MM-YYYY');
+Step 3: Find the total cost of books category-wise
+sql
+Copy code
+SELECT category_code, SUM(cost) AS total_cost
+FROM book
+GROUP BY category_code;
+Step 4: PL/SQL Block to Find Whether the Given Number is Odd or Even
+sql
+Copy code
+DECLARE
+    v_number NUMBER := &input_number;  -- Replace &input_number with the desired number when running
+BEGIN
+    IF MOD(v_number, 2) = 0 THEN
+        DBMS_OUTPUT.PUT_LINE(v_number || ' is even.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE(v_number || ' is odd.');
+    END IF;
+END;
+Step 5: PL/SQL Block to Display a Particular Book's Details
+sql
+Copy code
+DECLARE
+    v_bookcode book.bookcode%TYPE := '&bookcode';  -- Replace &bookcode with the desired book code when running
+    v_category_code book.category_code%TYPE;
+    v_bookname book.bookname%TYPE;
+    v_cost book.cost%TYPE;
+BEGIN
+    BEGIN
+        SELECT category_code, bookname, cost
+        INTO v_category_code, v_bookname, v_cost
+        FROM book
+        WHERE bookcode = v_bookcode;
+        
+        DBMS_OUTPUT.PUT_LINE('Book Code: ' || v_bookcode);
+        DBMS_OUTPUT.PUT_LINE('Category Code: ' || v_category_code);
+        DBMS_OUTPUT.PUT_LINE('Book Name: ' || v_bookname);
+        DBMS_OUTPUT.PUT_LINE('Cost: ' || v_cost);
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('Book with code ' || v_bookcode || ' not found.');
+    END;
+END;
+Complete SQL Code Example
+Combining all the steps together:
+sql
+Copy code
+-- Step 1: Create Tables
+
+-- Create Table member
+CREATE TABLE member (
+    member_code VARCHAR2(5) PRIMARY KEY,
+    member_name VARCHAR2(30),
+    phoneno VARCHAR2(15)
+);
+
+-- Create Table book
+CREATE TABLE book (
+    bookcode VARCHAR2(5) PRIMARY KEY,
+    category_code VARCHAR2(5),
+    bookname VARCHAR2(50),
+    cost NUMBER(9,2)
+);
+
+-- Create Table issue
+CREATE TABLE issue (
+    membercode VARCHAR2(5),
+    bookcode VARCHAR2(5),
+    issuedate DATE,
+    returndate DATE,
+    PRIMARY KEY (membercode, bookcode, issuedate),
+    FOREIGN KEY (membercode) REFERENCES member(member_code),
+    FOREIGN KEY (bookcode) REFERENCES book(bookcode)
+);
+
+-- Step 2: List all the members' names who have taken the book on 8-10-2007
+SELECT m.member_name
+FROM member m
+JOIN issue i ON m.member_code = i.membercode
+WHERE i.issuedate = TO_DATE('08-10-2007', 'DD-MM-YYYY');
+
+-- Step 3: Find the total cost of books category-wise
+SELECT category_code, SUM(cost) AS total_cost
+FROM book
+GROUP BY category_code;
+
+-- Step 4: PL/SQL Block to Find Whether the Given Number is Odd or Even
+DECLARE
+    v_number NUMBER := &input_number;  -- Replace &input_number with the desired number when running
+BEGIN
+    IF MOD(v_number, 2) = 0 THEN
+        DBMS_OUTPUT.PUT_LINE(v_number || ' is even.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE(v_number || ' is odd.');
+    END IF;
+END;
+
+-- Step 5: PL/SQL Block to Display a Particular Book's Details
+DECLARE
+    v_bookcode book.bookcode%TYPE := '&bookcode';  -- Replace &bookcode with the desired book code when running
+    v_category_code book.category_code%TYPE;
+    v_bookname book.bookname%TYPE;
+    v_cost book.cost%TYPE;
+BEGIN
+    BEGIN
+        SELECT category_code, bookname, cost
+        INTO v_category_code, v_bookname, v_cost
+        FROM book
+        WHERE bookcode = v_bookcode;
+        
+        DBMS_OUTPUT.PUT_LINE('Book Code: ' || v_bookcode);
+        DBMS_OUTPUT.PUT_LINE('Category Code: ' || v_category_code);
+        DBMS_OUTPUT.PUT_LINE('Book Name: ' || v_bookname);
+        DBMS_OUTPUT.PUT_LINE('Cost: ' || v_cost);
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('Book with code ' || v_bookcode || ' not found.');
+    END;
+END;
+These commands create the necessary tables, execute the required queries, and implement the PL/SQL blocks as per the given requirements.
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+25.	Create a table ‘Student’ with the following details (table level constraints) Rollno number(5) Primary key Name varchar2(10) Coursecode number(2) Foreign key (Reference ‘Course’ table) Mark1 number(3) Check whether values range from 0 to 100 Mark2 number(3) Check whether values range from 0 to 100 Create a table ‘Course’ with the following details (table level constraints) Ccode number(2) Primary key Course varchar2(10) i. Add the field total to table student ii. Insert 5 records into the table. iii. List the student names and their course names iv. Write a PL/SQL block to find the total marks for the student. SQL code
+ChatGPT
+ChatGPT
+Step 1: Create Tables
+sql
+Copy code
+-- Create Table Course
+CREATE TABLE Course (
+    Ccode NUMBER(2) PRIMARY KEY,
+    Course VARCHAR2(10)
+);
+
+-- Create Table Student
+CREATE TABLE Student (
+    Rollno NUMBER(5) PRIMARY KEY,
+    Name VARCHAR2(10),
+    Coursecode NUMBER(2),
+    Mark1 NUMBER(3) CHECK (Mark1 BETWEEN 0 AND 100),
+    Mark2 NUMBER(3) CHECK (Mark2 BETWEEN 0 AND 100),
+    FOREIGN KEY (Coursecode) REFERENCES Course(Ccode)
+);
+Step 2: Add the Field total to Table Student
+sql
+Copy code
+ALTER TABLE Student ADD total NUMBER(3);
+Step 3: Insert 5 Records into the Table
+sql
+Copy code
+-- Inserting records into Course table
+INSERT INTO Course (Ccode, Course)
+VALUES (1, 'Math');
+INSERT INTO Course (Ccode, Course)
+VALUES (2, 'Science');
+INSERT INTO Course (Ccode, Course)
+VALUES (3, 'English');
+
+-- Inserting records into Student table
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2)
+VALUES (1001, 'John', 1, 85, 90);
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2)
+VALUES (1002, 'Jane', 2, 78, 88);
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2)
+VALUES (1003, 'Tom', 3, 92, 80);
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2)
+VALUES (1004, 'Lucy', 1, 70, 75);
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2)
+VALUES (1005, 'Mark', 2, 88, 82);
+Step 4: List the Student Names and Their Course Names
+sql
+Copy code
+SELECT s.Name AS StudentName, c.Course AS CourseName
+FROM Student s
+JOIN Course c ON s.Coursecode = c.Ccode;
+Step 5: PL/SQL Block to Find the Total Marks for the Student
+sql
+Copy code
+DECLARE
+    v_rollno Student.Rollno%TYPE := &input_rollno; -- Replace &input_rollno with the desired roll number
+    v_mark1 Student.Mark1%TYPE;
+    v_mark2 Student.Mark2%TYPE;
+    v_total Student.total%TYPE;
+BEGIN
+    SELECT Mark1, Mark2
+    INTO v_mark1, v_mark2
+    FROM Student
+    WHERE Rollno = v_rollno;
+
+    v_total := v_mark1 + v_mark2;
+
+    UPDATE Student
+    SET total = v_total
+    WHERE Rollno = v_rollno;
+
+    DBMS_OUTPUT.PUT_LINE('Total marks for Rollno ' || v_rollno || ' is ' || v_total);
+END;
+Complete SQL Code Example
+Combining all the steps together:
+sql
+Copy code
+-- Step 1: Create Tables
+
+-- Create Table Course
+CREATE TABLE Course (
+    Ccode NUMBER(2) PRIMARY KEY,
+    Course VARCHAR2(10)
+);
+
+-- Create Table Student
+CREATE TABLE Student (
+    Rollno NUMBER(5) PRIMARY KEY,
+    Name VARCHAR2(10),
+    Coursecode NUMBER(2),
+    Mark1 NUMBER(3) CHECK (Mark1 BETWEEN 0 AND 100),
+    Mark2 NUMBER(3) CHECK (Mark2 BETWEEN 0 AND 100),
+    FOREIGN KEY (Coursecode) REFERENCES Course(Ccode)
+);
+
+-- Step 2: Add the Field `total` to Table `Student`
+ALTER TABLE Student ADD total NUMBER(3);
+
+-- Step 3: Insert 5 Records into the Table
+
+-- Inserting records into Course table
+INSERT INTO Course (Ccode, Course)
+VALUES (1, 'Math');
+INSERT INTO Course (Ccode, Course)
+VALUES (2, 'Science');
+INSERT INTO Course (Ccode, Course)
+VALUES (3, 'English');
+
+-- Inserting records into Student table
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2)
+VALUES (1001, 'John', 1, 85, 90);
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2)
+VALUES (1002, 'Jane', 2, 78, 88);
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2)
+VALUES (1003, 'Tom', 3, 92, 80);
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2)
+VALUES (1004, 'Lucy', 1, 70, 75);
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2)
+VALUES (1005, 'Mark', 2, 88, 82);
+
+-- Step 4: List the Student Names and Their Course Names
+SELECT s.Name AS StudentName, c.Course AS CourseName
+FROM Student s
+JOIN Course c ON s.Coursecode = c.Ccode;
+
+-- Step 5: PL/SQL Block to Find the Total Marks for the Student
+DECLARE
+    v_rollno Student.Rollno%TYPE := &input_rollno; -- Replace &input_rollno with the desired roll number
+    v_mark1 Student.Mark1%TYPE;
+    v_mark2 Student.Mark2%TYPE;
+    v_total Student.total%TYPE;
+BEGIN
+    SELECT Mark1, Mark2
+    INTO v_mark1, v_mark2
+    FROM Student
+    WHERE Rollno = v_rollno;
+
+    v_total := v_mark1 + v_mark2;
+
+    UPDATE Student
+    SET total = v_total
+    WHERE Rollno = v_rollno;
+
+    DBMS_OUTPUT.PUT_LINE('Total marks for Rollno ' || v_rollno || ' is ' || v_total);
+END;
+These commands create the necessary tables, execute the required queries, insert the records, and implement the PL/SQL block as per the given requirements.
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+26.	Create a table vendor_master with the following fields Vencode varchar2(5) Venname varchar2(15) Venadd1 varchar2(30) Venadd2 varchar2(30) Venadd3 varchar2(30) i. Modify the existing column Venname from varchar2(15) to varchar2(25) ii. Delete the table Vendor_master iii. Find the total number of vendors. iv. Display the vendor names in descending order. v. Write a PL/SQL function to find the factorial of a given number. SQL code
+ChatGPT
+ChatGPT
+Here are the SQL commands to accomplish each of the tasks for the vendor_master table:
+Step 1: Create Table vendor_master
+sql
+Copy code
+CREATE TABLE vendor_master (
+    Vencode VARCHAR2(5),
+    Venname VARCHAR2(15),
+    Venadd1 VARCHAR2(30),
+    Venadd2 VARCHAR2(30),
+    Venadd3 VARCHAR2(30)
+);
+i. Modify the Existing Column Venname from varchar2(15) to varchar2(25)
+sql
+Copy code
+ALTER TABLE vendor_master
+MODIFY (Venname VARCHAR2(25));
+ii. Delete the Table vendor_master
+sql
+Copy code
+DROP TABLE vendor_master;
+iii. Find the Total Number of Vendors
+sql
+Copy code
+SELECT COUNT(*) AS TotalVendors
+FROM vendor_master;
+iv. Display the Vendor Names in Descending Order
+sql
+Copy code
+SELECT Venname
+FROM vendor_master
+ORDER BY Venname DESC;
+v. Write a PL/SQL Function to Find the Factorial of a Given Number
+sql
+Copy code
+CREATE OR REPLACE FUNCTION factorial_func(num IN NUMBER) RETURN NUMBER IS
+    result NUMBER := 1;
+BEGIN
+    IF num < 0 THEN
+        RETURN NULL; -- Factorial is not defined for negative numbers
+    ELSIF num = 0 OR num = 1 THEN
+        RETURN 1; -- Factorial of 0 and 1 is 1
+    ELSE
+        FOR i IN 2..num LOOP
+            result := result * i;
+        END LOOP;
+        RETURN result;
+    END IF;
+END factorial_func;
+Complete SQL Code Example
+Combining all the steps together:
+sql
+Copy code
+-- Create Table vendor_master
+CREATE TABLE vendor_master (
+    Vencode VARCHAR2(5),
+    Venname VARCHAR2(15),
+    Venadd1 VARCHAR2(30),
+    Venadd2 VARCHAR2(30),
+    Venadd3 VARCHAR2(30)
+);
+
+-- i. Modify the Existing Column Venname from varchar2(15) to varchar2(25)
+ALTER TABLE vendor_master
+MODIFY (Venname VARCHAR2(25));
+
+-- ii. Delete the Table vendor_master
+DROP TABLE vendor_master;
+
+-- iii. Find the Total Number of Vendors
+SELECT COUNT(*) AS TotalVendors
+FROM vendor_master;
+
+-- iv. Display the Vendor Names in Descending Order
+SELECT Venname
+FROM vendor_master
+ORDER BY Venname DESC;
+
+-- v. PL/SQL Function to Find the Factorial of a Given Number
+CREATE OR REPLACE FUNCTION factorial_func(num IN NUMBER) RETURN NUMBER IS
+    result NUMBER := 1;
+BEGIN
+    IF num < 0 THEN
+        RETURN NULL; -- Factorial is not defined for negative numbers
+    ELSIF num = 0 OR num = 1 THEN
+        RETURN 1; -- Factorial of 0 and 1 is 1
+    ELSE
+        FOR i IN 2..num LOOP
+            result := result * i;
+        END LOOP;
+        RETURN result;
+    END IF;
+END factorial_func;
+These SQL commands cover creating, modifying, deleting a table, querying for totals and ordering data, and defining a PL/SQL function for calculating the factorial of a number. Adjust the function and queries as per your specific requirements or database schema.
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+. Create a table order_master with the following fields Orderno varchar2(5) Ordate date Vencode varchar2(5) Ordstatus char(1) (p-pending,d-delivered) Del_date Date Create a table order_detail with the following fields Orderno varchar2(5) Itemcode varchar2(5) Qty_ord number(5) Qty_deld number(5) i. Display the information on orders being handled by a vendor whose Vencode is ‘V004’ according to the delivery date order ii. List the orders which have been placed after ’01-Jan-2018’ and before ’01-Jul-2018’. iii. List out the pending orders iv. Write a PL/SQL block to find the sum of ‘n’ natural numbers SQL code
+ChatGPT
+ChatGPT
+Here's how you can create the tables order_master and order_detail, and perform the tasks as requested:
+Step 1: Create Table order_master
+sql
+Copy code
+CREATE TABLE order_master (
+    Orderno VARCHAR2(5),
+    Ordate DATE,
+    Vencode VARCHAR2(5),
+    Ordstatus CHAR(1),
+    Del_date DATE
+);
+Step 2: Create Table order_detail
+sql
+Copy code
+CREATE TABLE order_detail (
+    Orderno VARCHAR2(5),
+    Itemcode VARCHAR2(5),
+    Qty_ord NUMBER(5),
+    Qty_deld NUMBER(5)
+);
+i. Display Orders Handled by Vendor 'V004' According to Delivery Date Order
+sql
+Copy code
+SELECT om.Orderno, om.Ordate, om.Vencode, om.Ordstatus, om.Del_date
+FROM order_master om
+WHERE om.Vencode = 'V004'
+ORDER BY om.Del_date;
+ii. List Orders Placed After '01-Jan-2018' and Before '01-Jul-2018'
+sql
+Copy code
+SELECT om.Orderno, om.Ordate, om.Vencode, om.Ordstatus, om.Del_date
+FROM order_master om
+WHERE om.Ordate > TO_DATE('01-Jan-2018', 'DD-Mon-YYYY')
+AND om.Ordate < TO_DATE('01-Jul-2018', 'DD-Mon-YYYY');
+iii. List Out Pending Orders
+sql
+Copy code
+SELECT om.Orderno, om.Ordate, om.Vencode, om.Ordstatus, om.Del_date
+FROM order_master om
+WHERE om.Ordstatus = 'p';
+iv. Write a PL/SQL Block to Find the Sum of 'n' Natural Numbers
+sql
+Copy code
+CREATE OR REPLACE FUNCTION sum_of_natural_numbers(n IN NUMBER) RETURN NUMBER IS
+    total_sum NUMBER := 0;
+BEGIN
+    FOR i IN 1..n LOOP
+        total_sum := total_sum + i;
+    END LOOP;
+    RETURN total_sum;
+END sum_of_natural_numbers;
+Complete SQL Code Example
+Combining all the steps together:
+sql
+Copy code
+-- Create Table order_master
+CREATE TABLE order_master (
+    Orderno VARCHAR2(5),
+    Ordate DATE,
+    Vencode VARCHAR2(5),
+    Ordstatus CHAR(1),
+    Del_date DATE
+);
+
+-- Create Table order_detail
+CREATE TABLE order_detail (
+    Orderno VARCHAR2(5),
+    Itemcode VARCHAR2(5),
+    Qty_ord NUMBER(5),
+    Qty_deld NUMBER(5)
+);
+
+-- i. Display Orders Handled by Vendor 'V004' According to Delivery Date Order
+SELECT om.Orderno, om.Ordate, om.Vencode, om.Ordstatus, om.Del_date
+FROM order_master om
+WHERE om.Vencode = 'V004'
+ORDER BY om.Del_date;
+
+-- ii. List Orders Placed After '01-Jan-2018' and Before '01-Jul-2018'
+SELECT om.Orderno, om.Ordate, om.Vencode, om.Ordstatus, om.Del_date
+FROM order_master om
+WHERE om.Ordate > TO_DATE('01-Jan-2018', 'DD-Mon-YYYY')
+AND om.Ordate < TO_DATE('01-Jul-2018', 'DD-Mon-YYYY');
+
+-- iii. List Out Pending Orders
+SELECT om.Orderno, om.Ordate, om.Vencode, om.Ordstatus, om.Del_date
+FROM order_master om
+WHERE om.Ordstatus = 'p';
+
+-- iv. PL/SQL Block to Find the Sum of 'n' Natural Numbers
+CREATE OR REPLACE FUNCTION sum_of_natural_numbers(n IN NUMBER) RETURN NUMBER IS
+    total_sum NUMBER := 0;
+BEGIN
+    FOR i IN 1..n LOOP
+        total_sum := total_sum + i;
+    END LOOP;
+    RETURN total_sum;
+END sum_of_natural_numbers;
+These SQL commands cover creating tables, querying based on specific criteria, and defining a PL/SQL function for calculating the sum of 'n' natural numbers. Adjust the queries and function as per your specific requirements or database schema.
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+28.	Create a table ‘Employee’ with the following details (Column level constraints) Empno Number(5) Primary key Empname Varchar2(20) Designation Varchar2(10) Date_of_join Date Salary Number(9,2) NOT NULL Depno Number(2) Foreign key(Reference ‘Department’ table) Create another table called ‘Department’ with the following structure(Column level constraints) Depno Number(2) Primary key Depname Varchar2(15) Deplocation Varchar2(10) i. List the employees whose depno is not equal to ‘01’ ii. Display designation, department no and total number of employees designation wise and department wise iii. List the Employee names and their department names.(Use Outer join) iv. Write a PL/SQL block to find the factorial of a given number in SQL code
+ChatGPT
+ChatGPT
+Here's how you can create the tables Employee and Department, and perform the tasks as requested:
+Step 1: Create Table Employee
+sql
+Copy code
+CREATE TABLE Employee (
+    Empno NUMBER(5) PRIMARY KEY,
+    Empname VARCHAR2(20),
+    Designation VARCHAR2(10),
+    Date_of_join DATE,
+    Salary NUMBER(9,2) NOT NULL,
+    Depno NUMBER(2),
+    CONSTRAINT fk_department FOREIGN KEY (Depno) REFERENCES Department(Depno)
+);
+Step 2: Create Table Department
+sql
+Copy code
+CREATE TABLE Department (
+    Depno NUMBER(2) PRIMARY KEY,
+    Depname VARCHAR2(15),
+    Deplocation VARCHAR2(10)
+);
+i. List Employees Whose Depno is Not Equal to '01'
+sql
+Copy code
+SELECT Empno, Empname, Designation, Date_of_join, Salary, Depno
+FROM Employee
+WHERE Depno <> '01';
+ii. Display Designation, Department No, and Total Number of Employees Designation-wise and Department-wise
+sql
+Copy code
+SELECT e.Designation, e.Depno, COUNT(e.Empno) AS TotalEmployees
+FROM Employee e
+GROUP BY e.Designation, e.Depno;
+iii. List Employee Names and Their Department Names (Using Outer Join)
+sql
+Copy code
+SELECT e.Empname, d.Depname
+FROM Employee e
+LEFT JOIN Department d ON e.Depno = d.Depno;
+iv. Write a PL/SQL Block to Find the Factorial of a Given Number
+sql
+Copy code
+-- PL/SQL Block to calculate factorial of a given number
+SET SERVEROUTPUT ON;
+
+DECLARE
+    num INTEGER := 5; -- Replace with the desired number for which factorial is to be calculated
+    factorial_result NUMBER := 1;
+BEGIN
+    FOR i IN 1..num LOOP
+        factorial_result := factorial_result * i;
+    END LOOP;
+    
+    DBMS_OUTPUT.PUT_LINE('Factorial of ' || num || ' is ' || factorial_result);
+END;
+/
+Complete SQL Code Example
+Combining all the SQL statements and PL/SQL block together:
+sql
+Copy code
+-- Create Table Employee
+CREATE TABLE Employee (
+    Empno NUMBER(5) PRIMARY KEY,
+    Empname VARCHAR2(20),
+    Designation VARCHAR2(10),
+    Date_of_join DATE,
+    Salary NUMBER(9,2) NOT NULL,
+    Depno NUMBER(2),
+    CONSTRAINT fk_department FOREIGN KEY (Depno) REFERENCES Department(Depno)
+);
+
+-- Create Table Department
+CREATE TABLE Department (
+    Depno NUMBER(2) PRIMARY KEY,
+    Depname VARCHAR2(15),
+    Deplocation VARCHAR2(10)
+);
+
+-- i. List Employees Whose Depno is Not Equal to '01'
+SELECT Empno, Empname, Designation, Date_of_join, Salary, Depno
+FROM Employee
+WHERE Depno <> '01';
+
+-- ii. Display Designation, Department No, and Total Number of Employees Designation-wise and Department-wise
+SELECT e.Designation, e.Depno, COUNT(e.Empno) AS TotalEmployees
+FROM Employee e
+GROUP BY e.Designation, e.Depno;
+
+-- iii. List Employee Names and Their Department Names (Using Outer Join)
+SELECT e.Empname, d.Depname
+FROM Employee e
+LEFT JOIN Department d ON e.Depno = d.Depno;
+
+-- iv. PL/SQL Block to Find the Factorial of a Given Number
+SET SERVEROUTPUT ON;
+
+DECLARE
+    num INTEGER := 5; -- Replace with the desired number for which factorial is to be calculated
+    factorial_result NUMBER := 1;
+BEGIN
+    FOR i IN 1..num LOOP
+        factorial_result := factorial_result * i;
+    END LOOP;
+    
+    DBMS_OUTPUT.PUT_LINE('Factorial of ' || num || ' is ' || factorial_result);
+END;
+/
+These SQL commands cover creating tables with column-level constraints, querying based on specific criteria, performing an outer join, and defining a PL/SQL block to calculate the factorial of a given number. Adjust the queries and PL/SQL block as per your specific requirements or database schema.
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+29.	Create a table itemfile with the following fields Itemcode varchar2(5) Itemdesc varchar2(30) P_category varchar2(30) (Spares, Accessories) Qty_hand number(5) Re_level number(5) Maxlevel number(5) Itemrate number(9,2) i. Find the item with maximum rate in each product category ii. Find the items whose quantity in hand is less than the maximum level for the ‘spares’ category iii. List the accessories items having item rate greater than the minimum item rate of ‘spares’ category. iv. List the items that are available more than 100 in quantity. v. Write a PL/SQL function to display the Fibonacci series in SQL code
+ChatGPT
+ChatGPT
+To address the tasks provided for the itemfile table, here are the SQL queries and PL/SQL function for each requirement:
+Step 1: Create Table itemfile
+sql
+Copy code
+CREATE TABLE itemfile (
+    Itemcode VARCHAR2(5),
+    Itemdesc VARCHAR2(30),
+    P_category VARCHAR2(30) CHECK (P_category IN ('Spares', 'Accessories')),
+    Qty_hand NUMBER(5),
+    Re_level NUMBER(5),
+    Maxlevel NUMBER(5),
+    Itemrate NUMBER(9,2)
+);
+i. Find the Item with Maximum Rate in Each Product Category
+sql
+Copy code
+SELECT P_category, Itemcode, Itemdesc, Itemrate
+FROM (
+    SELECT P_category, Itemcode, Itemdesc, Itemrate,
+           ROW_NUMBER() OVER (PARTITION BY P_category ORDER BY Itemrate DESC) AS rn
+    FROM itemfile
+) WHERE rn = 1;
+ii. Find the Items Whose Quantity in Hand is Less Than the Maximum Level for the 'Spares' Category
+sql
+Copy code
+SELECT Itemcode, Itemdesc, Qty_hand, Maxlevel
+FROM itemfile
+WHERE P_category = 'Spares' AND Qty_hand < Maxlevel;
+iii. List the Accessories Items Having Item Rate Greater Than the Minimum Item Rate of 'Spares' Category
+sql
+Copy code
+SELECT a.Itemcode, a.Itemdesc, a.Itemrate
+FROM itemfile a
+JOIN (
+    SELECT MIN(Itemrate) AS min_spare_rate
+    FROM itemfile
+    WHERE P_category = 'Spares'
+) b ON a.Itemrate > b.min_spare_rate
+WHERE a.P_category = 'Accessories';
+iv. List the Items That Are Available More Than 100 in Quantity
+sql
+Copy code
+SELECT Itemcode, Itemdesc, Qty_hand
+FROM itemfile
+WHERE Qty_hand > 100;
+v. Write a PL/SQL Function to Display the Fibonacci Series
+Here's an example of a PL/SQL function to generate Fibonacci series up to a specified number of terms:
+sql
+Copy code
+CREATE OR REPLACE FUNCTION fibonacci_series(n IN NUMBER) RETURN VARCHAR2 IS
+    fib_sequence VARCHAR2(4000) := '0, 1';
+    a NUMBER := 0;
+    b NUMBER := 1;
+BEGIN
+    FOR i IN 3..n LOOP
+        fib_sequence := fib_sequence || ', ' || (a + b);
+        b := a + b;
+        a := b - a;
+    END LOOP;
+    
+    RETURN fib_sequence;
+END fibonacci_series;
+Example Usage of PL/SQL Function:
+sql
+Copy code
+-- Example: Display Fibonacci series up to 10 terms
+DECLARE
+    fib_seq VARCHAR2(4000);
+BEGIN
+    fib_seq := fibonacci_series(10);
+    DBMS_OUTPUT.PUT_LINE('Fibonacci Series: ' || fib_seq);
+END;
+/
+This script provides the SQL queries to fulfill each requirement for the itemfile table and a PL/SQL function to generate a Fibonacci series. Adjust the queries and function as per your specific requirements or database schema.
+Anonymous
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+30.	Create a table ‘Employee’ with the following details(Column level constraints) Empno Number(5) Primary key Empname Varchar2(20) Designation Varchar2(10) Date_of_join Date Salary Number(9,2) NOT NULL Depno Number(2) Foreign key(Reference ‘Department’ table) Create another table called ‘Department’ with the following structure(Column level constraints) Depno Number(2) Primary key Depname Varchar2(15) Deplocation Varchar2(10) i. Display the number of employees in each department with the department numbers in descending order ii. List the departments where there are employees functioning iii. Display the employee names and their years of service iv. Write a PL/SQL function to count the number of employees in a particular department SQL code
+ChatGPT
+ChatGPT
+Here’s how you can address each part of the problem involving the Employee and Department tables:
+Step 1: Create Tables Employee and Department
+sql
+Copy code
+-- Create Department Table
+CREATE TABLE Department (
+    Depno NUMBER(2) PRIMARY KEY,
+    Depname VARCHAR2(15),
+    Deplocation VARCHAR2(10)
+);
+
+-- Create Employee Table
+CREATE TABLE Employee (
+    Empno NUMBER(5) PRIMARY KEY,
+    Empname VARCHAR2(20),
+    Designation VARCHAR2(10),
+    Date_of_join DATE,
+    Salary NUMBER(9,2) NOT NULL,
+    Depno NUMBER(2),
+    FOREIGN KEY (Depno) REFERENCES Department(Depno)
+);
+i. Display the Number of Employees in Each Department with Department Numbers in Descending Order
+sql
+Copy code
+SELECT Depno, COUNT(*) AS Employee_Count
+FROM Employee
+GROUP BY Depno
+ORDER BY Depno DESC;
+ii. List the Departments Where There Are Employees Functioning
+sql
+Copy code
+SELECT DISTINCT d.Depno, d.Depname
+FROM Department d
+JOIN Employee e ON d.Depno = e.Depno;
+iii. Display the Employee Names and Their Years of Service
+sql
+Copy code
+SELECT Empname, TRUNC(MONTHS_BETWEEN(SYSDATE, Date_of_join) / 12) AS Years_of_Service
+FROM Employee;
+iv. Write a PL/SQL Function to Count the Number of Employees in a Particular Department
+sql
+Copy code
+CREATE OR REPLACE FUNCTION Count_Employees_In_Department(dep_id NUMBER) RETURN NUMBER IS
+    emp_count NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO emp_count
+    FROM Employee
+    WHERE Depno = dep_id;
+    
+    RETURN emp_count;
+END Count_Employees_In_Department;
+/
+Example Usage of the PL/SQL Function
+sql
+Copy code
+DECLARE
+    dept_id NUMBER := 10; -- Change this value to test with different department IDs
+    num_employees NUMBER;
+BEGIN
+    num_employees := Count_Employees_In_Department(dept_id);
+    DBMS_OUTPUT.PUT_LINE('Number of employees in department ' || dept_id || ': ' || num_employees);
+END;
+/
+This script includes:
+•	The creation of Employee and Department tables.
+•	SQL queries to answer each requirement.
+•	A PL/SQL function to count the number of employees in a specific department, along with an example of how to call this function.
+Feel free to adjust the values and queries as needed!
+
+Sign up to chat
+
+
