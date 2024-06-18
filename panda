@@ -208,7 +208,6 @@ import matplotlib.pyplot as plt
 from scipy import stats
 
 def z_test_one_tailed(data, population_mean, alpha, alternative='two-sided'):
-    
     sample_mean = np.mean(data)
     sample_std = np.std(data, ddof=1)  
     n = len(data)
@@ -216,9 +215,7 @@ def z_test_one_tailed(data, population_mean, alpha, alternative='two-sided'):
     # Standard error of the mean
     sem = sample_std / np.sqrt(n)
     
-    
-
-# Step 4: Calculate test Statistics and decide to accept or reject the null hypothesis
+    # Step 4: Calculate test statistics and decide to accept or reject the null hypothesis
     z_score = (sample_mean - population_mean) / sem
     
     # Calculate p-value
@@ -231,19 +228,9 @@ def z_test_one_tailed(data, population_mean, alpha, alternative='two-sided'):
     
     # Step 5: Evaluate and return the result
     if p_value < alpha:
-        if alternative == 'greater':
-            return f"Reject null hypothesis. (p-value: {p_value})."
-        elif alternative == 'less':
-            return f"Reject null hypothesis. (p-value: {p_value})."
-        else:
-            return f"Reject null hypothesis. (p-value: {p_value})."
+        return f"Reject null hypothesis. (p-value: {p_value})."
     else:
-        if alternative == 'greater':
-            return f"Fail to reject null hypothesis. (p-value: {p_value})."
-        elif alternative == 'less':
-            return f"Fail to reject null hypothesis. (p-value: {p_value})."
-        else:
-            return f"Fail to reject null hypothesis.  (p-value: {p_value})."
+        return f"Fail to reject null hypothesis. (p-value: {p_value})."
 
 def plot_normal_curve(data, population_mean, alpha):
     mu = np.mean(data)
@@ -253,20 +240,17 @@ def plot_normal_curve(data, population_mean, alpha):
     x = np.linspace(xmin, xmax, 100)
     plt.plot(x, stats.norm.pdf(x, mu, sigma))
     plt.title('Normal Distribution of Scores')
-    
-plt.xlabel('Score')
+    plt.xlabel('Score')
     plt.ylabel('Probability Density')
-
     
     # Shade the region beyond critical values for one-tailed tests
     if alpha != 0.5:
-        if alpha == 0.05:
-            if mu < population_mean:  # For one-tailed less test
-                critical_value = stats.norm.ppf(alpha)
-                plt.fill_between(x[x <= mu + critical_value], 0, stats.norm.pdf(x[x <= mu + critical_value], mu, sigma), color='red', alpha=0.3)
-            else:  # For one-tailed greater test
-                critical_value = stats.norm.ppf(1-alpha)
-                plt.fill_between(x[x >= mu + critical_value], 0, stats.norm.pdf(x[x >= mu + critical_value], mu, sigma), color='red', alpha=0.3)
+        if mu < population_mean:  # For one-tailed less test
+            critical_value = stats.norm.ppf(alpha)
+            plt.fill_between(x[x <= mu + critical_value], 0, stats.norm.pdf(x[x <= mu + critical_value], mu, sigma), color='red', alpha=0.3)
+        else:  # For one-tailed greater test
+            critical_value = stats.norm.ppf(1-alpha)
+            plt.fill_between(x[x >= mu + critical_value], 0, stats.norm.pdf(x[x >= mu + critical_value], mu, sigma), color='red', alpha=0.3)
     
     plt.axvline(mu, color='k', linestyle='dashed', linewidth=1)  # Plot a vertical line at the mean
     plt.show()
@@ -286,14 +270,9 @@ print("One-tailed Z-test (greater):")
 print(result_greater)
 print()
 
-
-
-
 # Perform one-tailed Z-test (less)
 result_less = z_test_one_tailed(scores, population_mean, alpha, alternative='less')
-
 print("One-tailed Z-test (less):")
-
 print(result_less)
 print()
 
@@ -305,6 +284,7 @@ print()
 
 # Plot Normal Curve
 plot_normal_curve(scores, population_mean, alpha)
+
 
 OUTPUT:
 One-tailed Z-test (greater):
