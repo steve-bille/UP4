@@ -69,14 +69,12 @@ Step 6. Return the samples obtained for analysis.
 
 PROGRAM:
 import random
-from collections import defaultdict
 import csv
 
 # Load the dataset from the file
 with open('employee.csv', mode='r') as file:
     reader = csv.DictReader(file)
     employees = [row for row in reader]
-
 
 # Simple Random Sampling (SRS) with replacement
 simple_with_replacement = random.choices(employees, k=5)
@@ -107,12 +105,11 @@ for emp in systematic_with_replacement:
     print(emp)
 
 # Systematic Sampling without replacement
-systematic_without_replacement = [employees[i] for i in range(0, len(employees), len(employees)//3)]
+step = len(employees) // 3
+systematic_without_replacement = [employees[i] for i in range(0, len(employees), step)]
 print("\nSystematic Sample without Replacement:")
 for emp in systematic_without_replacement:
     print(emp)
-
-
 
 # Cluster Sampling without replacement
 unique_genders = set(emp["Gender"] for emp in employees)
@@ -127,6 +124,7 @@ cluster_with_replacement = [random.choice(cluster_without_replacement) for _ in 
 print("\nCluster Sample with Replacement:")
 for emp in cluster_with_replacement:
     print(emp)
+
 
 OUTPUT:
 Simple Random Sample with Replacement:
